@@ -4,6 +4,7 @@
 
 package simulator;
 
+import javax.swing.UIManager;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -27,6 +28,7 @@ public class SimulatorApp extends SingleFrameApplication {
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
+
         this.simulator = new Simulator();
         SimulatorView simulatorView = new SimulatorView(this);
         show(simulatorView);
@@ -53,6 +55,14 @@ public class SimulatorApp extends SingleFrameApplication {
      * Main method launching the application.
      */
     public static void main(String[] args) {
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            // Niets doen
+            System.out.println(ex);
+        }
+
         launch(SimulatorApp.class, args);
         
     }
