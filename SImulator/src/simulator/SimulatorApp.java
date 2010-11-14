@@ -10,13 +10,27 @@ import org.jdesktop.application.SingleFrameApplication;
 /**
  * The main class of the application.
  */
-public class SImulatorApp extends SingleFrameApplication {
+public class SimulatorApp extends SingleFrameApplication {
+
+    protected Simulator simulator;
+
+    /**
+     * Get the value of simulator
+     *
+     * @return the value of simulator
+     */
+    public Simulator getSimulator() {
+        return simulator;
+    }
 
     /**
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
-        show(new SImulatorView(this));
+        this.simulator = new Simulator();
+        SimulatorView simulatorView = new SimulatorView(this);
+        show(simulatorView);
+
     }
 
     /**
@@ -31,14 +45,15 @@ public class SImulatorApp extends SingleFrameApplication {
      * A convenient static getter for the application instance.
      * @return the instance of SImulatorApp
      */
-    public static SImulatorApp getApplication() {
-        return Application.getInstance(SImulatorApp.class);
+    public static SimulatorApp getApplication() {
+        return Application.getInstance(SimulatorApp.class);
     }
 
     /**
      * Main method launching the application.
      */
     public static void main(String[] args) {
-        launch(SImulatorApp.class, args);
+        launch(SimulatorApp.class, args);
+        
     }
 }

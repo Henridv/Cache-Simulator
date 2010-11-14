@@ -6,9 +6,9 @@ package simulator;
 
 import org.jdesktop.application.Action;
 
-public class SImulatorAboutBox extends javax.swing.JDialog {
+public class SimulatorAboutBox extends javax.swing.JDialog {
 
-    public SImulatorAboutBox(java.awt.Frame parent) {
+    public SimulatorAboutBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
         getRootPane().setDefaultButton(closeButton);
@@ -38,13 +38,13 @@ public class SImulatorAboutBox extends javax.swing.JDialog {
         javax.swing.JLabel imageLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(simulator.SImulatorApp.class).getContext().getResourceMap(SImulatorAboutBox.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(simulator.SimulatorApp.class).getContext().getResourceMap(SimulatorAboutBox.class);
         setTitle(resourceMap.getString("title")); // NOI18N
         setModal(true);
         setName("aboutBox"); // NOI18N
         setResizable(false);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(simulator.SImulatorApp.class).getContext().getActionMap(SImulatorAboutBox.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(simulator.SimulatorApp.class).getContext().getActionMap(SimulatorAboutBox.class, this);
         closeButton.setAction(actionMap.get("closeAboutBox")); // NOI18N
         closeButton.setName("closeButton"); // NOI18N
 

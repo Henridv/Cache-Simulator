@@ -1,9 +1,9 @@
 /*
  * SImulatorView.java
  */
-
 package simulator;
 
+import javax.swing.event.ListDataListener;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -11,18 +11,27 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.ComboBoxModel;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import simulator.GUI.CacheTypeModel;
+import simulator.parts.Cache;
+import simulator.tasks.TraceReadTask;
 
 /**
  * The application's main frame.
  */
-public class SImulatorView extends FrameView {
+public class SimulatorView extends FrameView {
 
-    public SImulatorView(SingleFrameApplication app) {
+
+
+    public SimulatorView(SingleFrameApplication app) {
         super(app);
+
+        cacheTypeModel = new CacheTypeModel();
 
         initComponents();
 
@@ -30,6 +39,7 @@ public class SImulatorView extends FrameView {
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 statusMessageLabel.setText("");
             }
@@ -40,6 +50,7 @@ public class SImulatorView extends FrameView {
             busyIcons[i] = resourceMap.getIcon("StatusBar.busyIcons[" + i + "]");
         }
         busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
                 statusAnimationLabel.setIcon(busyIcons[busyIconIndex]);
@@ -52,6 +63,7 @@ public class SImulatorView extends FrameView {
         // connecting action tasks to status bar via TaskMonitor
         TaskMonitor taskMonitor = new TaskMonitor(getApplication().getContext());
         taskMonitor.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 String propertyName = evt.getPropertyName();
                 if ("started".equals(propertyName)) {
@@ -68,11 +80,11 @@ public class SImulatorView extends FrameView {
                     progressBar.setVisible(false);
                     progressBar.setValue(0);
                 } else if ("message".equals(propertyName)) {
-                    String text = (String)(evt.getNewValue());
+                    String text = (String) (evt.getNewValue());
                     statusMessageLabel.setText((text == null) ? "" : text);
                     messageTimer.restart();
                 } else if ("progress".equals(propertyName)) {
-                    int value = (Integer)(evt.getNewValue());
+                    int value = (Integer) (evt.getNewValue());
                     progressBar.setVisible(true);
                     progressBar.setIndeterminate(false);
                     progressBar.setValue(value);
@@ -84,12 +96,32 @@ public class SImulatorView extends FrameView {
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
-            JFrame mainFrame = SImulatorApp.getApplication().getMainFrame();
-            aboutBox = new SImulatorAboutBox(mainFrame);
+            JFrame mainFrame = SimulatorApp.getApplication().getMainFrame();
+            aboutBox = new SimulatorAboutBox(mainFrame);
             aboutBox.setLocationRelativeTo(mainFrame);
         }
-        SImulatorApp.getApplication().show(aboutBox);
+        SimulatorApp.getApplication().show(aboutBox);
     }
+
+    public void updateHitMisses() {
+        Cache cache = SimulatorApp.getApplication().getSimulator().getCache();
+        hitsLabel.setText("" + cache.getHits());
+        missesLabel.setText("" + cache.getMisses());
+        hitrateLabel.setText(""+ cache.getHitRate()*100 + " %");
+        missrateLabel.setText(""+ cache.getMissRate()*100 + " %");
+    }
+
+    public void setDirectMappedCache() {
+        SimulatorApp.getApplication().getSimulator().setCacheType(Simulator.CacheType.DirectMappedCache);
+        System.out.println("Test1");
+    }
+
+    public void setDirectMappedCacheWithPrefetch() {
+        // Aanpassen
+        System.out.println("Test2");
+        SimulatorApp.getApplication().getSimulator().setCacheType(Simulator.CacheType.DirectMappedCache);
+    }
+
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -101,8 +133,18 @@ public class SImulatorView extends FrameView {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        missesLabel = new javax.swing.JLabel();
+        hitsLabel = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        hitrateLabel = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        missrateLabel = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
+        Open = new javax.swing.JMenuItem();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
@@ -111,27 +153,104 @@ public class SImulatorView extends FrameView {
         statusMessageLabel = new javax.swing.JLabel();
         statusAnimationLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
+        fileChooser = new javax.swing.JFileChooser();
 
         mainPanel.setName("mainPanel"); // NOI18N
+
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(simulator.SimulatorApp.class).getContext().getResourceMap(SimulatorView.class);
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
+
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        missesLabel.setText(resourceMap.getString("missesLabel.text")); // NOI18N
+        missesLabel.setName("missesLabel"); // NOI18N
+
+        hitsLabel.setText(resourceMap.getString("hitsLabel.text")); // NOI18N
+        hitsLabel.setName("hitsLabel"); // NOI18N
+
+        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setName("jLabel3"); // NOI18N
+
+        hitrateLabel.setText(resourceMap.getString("hitrateLabel.text")); // NOI18N
+        hitrateLabel.setName("hitrateLabel"); // NOI18N
+
+        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
+        jLabel4.setName("jLabel4"); // NOI18N
+
+        missrateLabel.setText(resourceMap.getString("missrateLabel.text")); // NOI18N
+        missrateLabel.setName("missrateLabel"); // NOI18N
+
+        jComboBox1.setModel(cacheTypeModel);
+        jComboBox1.setName("jComboBox1"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 459, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(18, 18, 18)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(hitsLabel)
+                            .addComponent(missesLabel)))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(hitrateLabel))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(missrateLabel))
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(390, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 397, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(84, 84, 84)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(hitsLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(missesLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(hitrateLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(missrateLabel))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(simulator.SImulatorApp.class).getContext().getResourceMap(SImulatorView.class);
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(simulator.SImulatorApp.class).getContext().getActionMap(SImulatorView.class, this);
+        Open.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        Open.setText(resourceMap.getString("Open.text")); // NOI18N
+        Open.setName("Open"); // NOI18N
+        Open.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpenActionPerformed(evt);
+            }
+        });
+        fileMenu.add(Open);
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(simulator.SimulatorApp.class).getContext().getActionMap(SimulatorView.class, this);
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
         exitMenuItem.setName("exitMenuItem"); // NOI18N
         fileMenu.add(exitMenuItem);
@@ -184,25 +303,54 @@ public class SImulatorView extends FrameView {
                 .addGap(3, 3, 3))
         );
 
+        fileChooser.setDialogTitle(resourceMap.getString("fileChooser.dialogTitle")); // NOI18N
+        fileChooser.setName("fileChooser"); // NOI18N
+
         setComponent(mainPanel);
         setMenuBar(menuBar);
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void OpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpenActionPerformed
+
+        int returnVal = fileChooser.showOpenDialog(mainPanel);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+            TraceReadTask task = new TraceReadTask(fileChooser.getSelectedFile());
+            SimulatorApp.getApplication().getContext().getTaskService().execute(task);
+            SimulatorApp.getApplication().getContext().getTaskMonitor().setForegroundTask(task);
+            missesLabel.setText("test");
+
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
+
+    }//GEN-LAST:event_OpenActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem Open;
+    private javax.swing.JFileChooser fileChooser;
+    private javax.swing.JLabel hitrateLabel;
+    private javax.swing.JLabel hitsLabel;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JLabel missesLabel;
+    private javax.swing.JLabel missrateLabel;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
     // End of variables declaration//GEN-END:variables
-
     private final Timer messageTimer;
     private final Timer busyIconTimer;
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
-
     private JDialog aboutBox;
+    private CacheTypeModel cacheTypeModel;
+
 }
