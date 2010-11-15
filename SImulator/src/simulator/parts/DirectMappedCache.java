@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import simulator.Simulator;
 import simulator.SimulatorApp;
 import simulator.prefetchers.Prefetcher;
+import simulator.victimcaches.PlainVictimCache;
 
 /**
  *
@@ -21,6 +22,7 @@ public class DirectMappedCache extends Cache {
      *
      */
     protected Prefetcher prefetcher;
+    protected PlainVictimCache victimCache;
 
     /**
      *
@@ -29,6 +31,7 @@ public class DirectMappedCache extends Cache {
         cache = new int[Simulator.CACHE_SIZE / Simulator.WORD_SIZE];
         onItsWayList = new ArrayList<Integer>();
         prefetcher = null;
+        victimCache = new PlainVictimCache(10);
     }
 
     /**
@@ -39,11 +42,12 @@ public class DirectMappedCache extends Cache {
         cache = new int[Simulator.CACHE_SIZE / Simulator.WORD_SIZE];
         onItsWayList = new ArrayList<Integer>();
         this.prefetcher = prefetcher;
-
+        victimCache = new PlainVictimCache(10);
     }
 
     /**
-     * 
+     * Simuleer een geheugentoegang en tel het aantal hits en misses in de cache
+     * Eventueel gebruikmakend van prefetch en victimcache
      * @param address
      * @return
      */
@@ -55,33 +59,52 @@ public class DirectMappedCache extends Cache {
         final int cacheAddress = (address / Simulator.WORD_SIZE) % Simulator.CACHE_SIZE;
         final int memAddress = (address / Simulator.WORD_SIZE);
 
+        // Zoek in cache
         if (cache[cacheAddress] == memAddress || onItsWayList.contains(memAddress)) {
             hit = true;
-            if(prefetcher != null) {
+            if (prefetcher != null) {
                 prefetcher.actionOnHit();
             }
             hits++;
-        } else {
-            final long time = simulator.getClock();
-            Thread delayThread = new Thread(new Runnable() {
+        } 
+        else  // Indien niet in cache
+        {
+            // Zoek in vitim cache als er victim cache is
+            if (victimCache != null && victimCache.contains(memAddress)) {
 
-                public void run() {
-                    onItsWayList.add(memAddress);
-                    while (simulator.getClock() < time + Simulator.MEM_ACCESS_TIME) {
+                victimCache.switchAddresses(cache[cacheAddress], memAddress);
+                cache[cacheAddress] = memAddress;
+
+                hit = true;
+                hits++;
+
+            } 
+            else // Niet in victim cache en niet in cache => miss
+            {
+                final long time = simulator.getClock();
+                Thread delayThread = new Thread(new Runnable() {
+
+                    public void run() {
+                        onItsWayList.add(memAddress);
+                        while (simulator.getClock() < time + Simulator.MEM_ACCESS_TIME) {
+                        }
+                        if (victimCache != null) {
+                            victimCache.add(memAddress);
+                        }
+                        cache[cacheAddress] = memAddress;
+                        // Call prefetcher if necessary
+                        if (prefetcher != null) {
+                            prefetcher.prefetchMemory(cache, memAddress);
+                        }
+                        onItsWayList.remove((Integer) memAddress);
                     }
-                    cache[cacheAddress] = memAddress;
-                    // Call prefetcher if necessary
-                    if(prefetcher != null) {
-                        prefetcher.prefetchMemory(cache, memAddress);
-                    }
-                    onItsWayList.remove((Integer) memAddress);
+                });
+                hit = false;
+                if (prefetcher != null) {
+                    prefetcher.actionOnMiss();
                 }
-            });
-            hit = false;
-            if(prefetcher != null) {
-                prefetcher.actionOnMiss();
+                misses++;
             }
-            misses++;
         }
 
         return hit;
@@ -103,5 +126,23 @@ public class DirectMappedCache extends Cache {
      */
     public void setPrefetcher(Prefetcher prefetcher) {
         this.prefetcher = prefetcher;
+    }
+
+    /**
+     * Get the value of victimCache
+     *
+     * @return the value of victimCache
+     */
+    public PlainVictimCache getVictimCache() {
+        return victimCache;
+    }
+
+    /**
+     * Set the value of victimCache
+     *
+     * @param victimCache new value of victimCache
+     */
+    public void setVictimCache(PlainVictimCache victimCache) {
+        this.victimCache = victimCache;
     }
 }
