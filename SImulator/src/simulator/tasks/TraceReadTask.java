@@ -19,6 +19,10 @@ public class TraceReadTask extends Task<Boolean, Integer> {
     private Simulator simulator;
     private SimulatorView simulatorView;
 
+    /**
+     * 
+     * @param trace
+     */
     public TraceReadTask(File trace) {
         super(SimulatorApp.getApplication());
         this.trace = trace;
@@ -26,6 +30,11 @@ public class TraceReadTask extends Task<Boolean, Integer> {
         simulatorView = (SimulatorView) SimulatorApp.getApplication().getMainView();
     }
 
+    /**
+     *
+     * @return
+     * @throws IOException
+     */
     @Override
     protected Boolean doInBackground() throws IOException {
         // Count lines
@@ -41,14 +50,18 @@ public class TraceReadTask extends Task<Boolean, Integer> {
         in = new BufferedReader(new FileReader(trace.getAbsolutePath()));
         String str;
         long count = 0;
-        float  progress = 0;
+        float progress = 0;
         while ((str = in.readLine()) != null) {
             if (!str.equals("")) {
-                count++;
-                simulator.memoryAccess(Integer.parseInt(str, 16));
-                progress = (float) count/total;
-                setMessage("Reading accesses");
-                setProgress(progress);
+                try {
+                    count++;
+                    simulator.memoryAccess(Integer.parseInt(str, 16));
+                    progress = (float) count / total;
+                    setMessage("Reading accesses");
+                    setProgress(progress);
+                } catch (NumberFormatException ex) {
+                    System.err.println("WARNING: Could not parse int: '" + str + "'");
+                }
             }
         }
         setMessage("Finished");
@@ -56,6 +69,9 @@ public class TraceReadTask extends Task<Boolean, Integer> {
         return true;
     }
 
+    /**
+     *
+     */
     @Override
     protected void finished() {
         simulatorView.updateHitMisses();

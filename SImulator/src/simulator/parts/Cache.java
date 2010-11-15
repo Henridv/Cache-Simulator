@@ -6,7 +6,13 @@ package simulator.parts;
  */
 public abstract class Cache {
 
+    /**
+     *
+     */
     protected long misses;
+    /**
+     * 
+     */
     protected long hits;
 
 
@@ -48,16 +54,29 @@ public abstract class Cache {
         this.misses = misses;
     }
 
+    /**
+     *
+     * @return
+     */
     public float getMissRate() {
         return (float)misses/((float)hits+(float)misses);
     }
 
+    /**
+     *
+     * @return
+     */
     public float getHitRate() {
         return (float)hits/((float)hits+(float)misses);
     }
 
 
     // True if hit, false if miss
+    /**
+     *
+     * @param address
+     * @return
+     */
     public abstract boolean access(int address);
 
 }

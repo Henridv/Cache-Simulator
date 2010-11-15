@@ -6,6 +6,19 @@ package simulator.prefetchers;
  */
 public abstract class Prefetcher {
 
-    public abstract void prefetchMemory(int[] memory, long address);
+    /**
+     *
+     * @param memory
+     * @param memAddress
+     */
+    public abstract void prefetchMemory(int[] memory, int memAddress);
+    /**
+     * 
+     */
+    public abstract void actionOnHit();
+    /**
+     *
+     */
+    public abstract void actionOnMiss();
 
 }

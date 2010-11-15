@@ -6,14 +6,25 @@ package simulator;
 
 import org.jdesktop.application.Action;
 
+/**
+ *
+ * @author ruben
+ */
 public class SimulatorAboutBox extends javax.swing.JDialog {
 
+    /**
+     * 
+     * @param parent
+     */
     public SimulatorAboutBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
         getRootPane().setDefaultButton(closeButton);
     }
 
+    /**
+     *
+     */
     @Action public void closeAboutBox() {
         dispose();
     }

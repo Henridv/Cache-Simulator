@@ -24,6 +24,10 @@ import simulator.tasks.TraceReadTask;
  */
 public class SimulatorView extends FrameView {
 
+    /**
+     * 
+     * @param app
+     */
     public SimulatorView(SingleFrameApplication app) {
         super(app);
         cacheTypeModel = new CacheTypeModel();
@@ -89,6 +93,9 @@ public class SimulatorView extends FrameView {
         });
     }
 
+    /**
+     *
+     */
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
@@ -99,6 +106,9 @@ public class SimulatorView extends FrameView {
         SimulatorApp.getApplication().show(aboutBox);
     }
 
+    /**
+     *
+     */
     public void updateHitMisses() {
         Cache cache = SimulatorApp.getApplication().getSimulator().getCache();
         hitsLabel.setText("" + cache.getHits());
@@ -333,7 +343,7 @@ public class SimulatorView extends FrameView {
     }//GEN-LAST:event_OpenActionPerformed
 
     private void simulateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulateButtonActionPerformed
-
+        SimulatorApp.getApplication().getSimulator().resetSimulator();
         TraceReadTask task = new TraceReadTask(SimulatorApp.getApplication().getSimulator().getTraceFile());
         SimulatorApp.getApplication().getContext().getTaskService().execute(task);
         SimulatorApp.getApplication().getContext().getTaskMonitor().setForegroundTask(task);
