@@ -77,6 +77,6 @@ public abstract class Cache {
      * @param address
      * @return
      */
-    public abstract boolean access(int address);
+    public abstract boolean access(long address);
 
 }

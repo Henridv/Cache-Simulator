@@ -20,7 +20,6 @@ public class ScalablePrefetch extends LinearPrefetch {
     @Override
     public void actionOnHit() {
         setNumberOfBlocks(getNumberOfBlocks()+1);
-        System.out.println(getNumberOfBlocks());
     }
 
     /**
@@ -30,6 +29,13 @@ public class ScalablePrefetch extends LinearPrefetch {
     public void actionOnMiss() {
         setNumberOfBlocks(1);
     }
+
+    @Override
+    public String toString() {
+        return "ScalablePrefetch";
+    }
+
+
 
 
 

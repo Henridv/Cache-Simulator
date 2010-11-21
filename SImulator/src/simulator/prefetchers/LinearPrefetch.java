@@ -11,13 +11,13 @@ public class LinearPrefetch extends Prefetcher {
     /**
      *
      */
-    protected int numberOfBlocks;
+    protected long numberOfBlocks;
 
     /**
      *
      * @param numberOfBlocks
      */
-    public LinearPrefetch(int numberOfBlocks) {
+    public LinearPrefetch(long numberOfBlocks) {
         this.numberOfBlocks = numberOfBlocks;
     }
 
@@ -26,7 +26,7 @@ public class LinearPrefetch extends Prefetcher {
      *
      * @return the value of numberOfBlocks
      */
-    public int getNumberOfBlocks() {
+    public long getNumberOfBlocks() {
         return numberOfBlocks;
     }
 
@@ -35,7 +35,7 @@ public class LinearPrefetch extends Prefetcher {
      *
      * @param numberOfBlocks new value of numberOfBlocks
      */
-    public void setNumberOfBlocks(int numberOfBlocks) {
+    public void setNumberOfBlocks(long numberOfBlocks) {
         this.numberOfBlocks = numberOfBlocks;
     }
 
@@ -44,9 +44,11 @@ public class LinearPrefetch extends Prefetcher {
      * @param memory
      * @param memAddress
      */
-    public void prefetchMemory(int[] memory, int memAddress) {
+    public void prefetchMemory(long[] memory, long memAddress) {
+        int index;
         for (int i = 0; i < numberOfBlocks; i++) {
-            memory[(memAddress + i) % Simulator.CACHE_SIZE] = memAddress;
+            index = (int) (((memAddress) + i) % Simulator.CACHE_ADDRESSES);
+            memory[index] = memAddress + i;
         }
     }
 
@@ -63,5 +65,11 @@ public class LinearPrefetch extends Prefetcher {
      */
     @Override
     public void actionOnMiss() {
+    }
+
+
+    @Override
+    public String toString() {
+        return "LinearPrefetch";
     }
 }

@@ -1,6 +1,5 @@
 package simulator.parts;
 
-import java.util.ArrayList;
 import simulator.Simulator;
 import simulator.SimulatorApp;
 import simulator.prefetchers.Prefetcher;
@@ -12,12 +11,8 @@ import simulator.victimcaches.PlainVictimCache;
  */
 public class DirectMappedCache extends Cache {
 
-    private int[] cache;
+    private long[] cache;
     private Simulator simulator;
-    /**
-     *
-     */
-    protected ArrayList<Integer> onItsWayList;
     /**
      *
      */
@@ -26,23 +21,12 @@ public class DirectMappedCache extends Cache {
 
     /**
      *
-     */
-    public DirectMappedCache() {
-        cache = new int[Simulator.CACHE_SIZE / Simulator.WORD_SIZE];
-        onItsWayList = new ArrayList<Integer>();
-        prefetcher = null;
-        victimCache = new PlainVictimCache(10);
-    }
-
-    /**
-     *
      * @param prefetcher
      */
-    public DirectMappedCache(Prefetcher prefetcher) {
-        cache = new int[Simulator.CACHE_SIZE / Simulator.WORD_SIZE];
-        onItsWayList = new ArrayList<Integer>();
+    public DirectMappedCache(Prefetcher prefetcher, PlainVictimCache victimCache) {
+        cache = new long[Simulator.CACHE_ADDRESSES];
         this.prefetcher = prefetcher;
-        victimCache = new PlainVictimCache(10);
+        this.victimCache = victimCache;
     }
 
     /**
@@ -52,25 +36,25 @@ public class DirectMappedCache extends Cache {
      * @return
      */
     @Override
-    public boolean access(final int address) {
+    public boolean access(final long address) {
 
         simulator = SimulatorApp.getApplication().getSimulator();
         boolean hit;
-        final int cacheAddress = (address / Simulator.WORD_SIZE) % Simulator.CACHE_SIZE;
-        final int memAddress = (address / Simulator.WORD_SIZE);
+        final int cacheAddress = (int) ((address / Simulator.WORD_SIZE) % Simulator.CACHE_ADDRESSES);
+        final long memAddress = (address / Simulator.WORD_SIZE);
 
         // Zoek in cache
-        if (cache[cacheAddress] == memAddress || onItsWayList.contains(memAddress)) {
+        if (cache[cacheAddress] == memAddress) {
             hit = true;
             if (prefetcher != null) {
                 prefetcher.actionOnHit();
             }
             hits++;
-        } 
-        else  // Indien niet in cache
+        } else // Indien niet in cache
         {
             // Zoek in vitim cache als er victim cache is
             if (victimCache != null && victimCache.contains(memAddress)) {
+                // TODO: blijkbaar komt hij hier nooit
 
                 victimCache.switchAddresses(cache[cacheAddress], memAddress);
                 cache[cacheAddress] = memAddress;
@@ -78,27 +62,17 @@ public class DirectMappedCache extends Cache {
                 hit = true;
                 hits++;
 
-            } 
-            else // Niet in victim cache en niet in cache => miss
+            } else // Niet in victim cache en niet in cache => miss
             {
-                final long time = simulator.getClock();
-                Thread delayThread = new Thread(new Runnable() {
 
-                    public void run() {
-                        onItsWayList.add(memAddress);
-                        while (simulator.getClock() < time + Simulator.MEM_ACCESS_TIME) {
-                        }
-                        if (victimCache != null) {
-                            victimCache.add(memAddress);
-                        }
-                        cache[cacheAddress] = memAddress;
-                        // Call prefetcher if necessary
-                        if (prefetcher != null) {
-                            prefetcher.prefetchMemory(cache, memAddress);
-                        }
-                        onItsWayList.remove((Integer) memAddress);
-                    }
-                });
+                if (victimCache != null) {
+                    victimCache.add(memAddress);
+                }
+                cache[cacheAddress] = memAddress;
+                // Call prefetcher if necessary
+                if (prefetcher != null) {
+                    prefetcher.prefetchMemory(cache, memAddress);
+                }
                 hit = false;
                 if (prefetcher != null) {
                     prefetcher.actionOnMiss();
@@ -144,5 +118,18 @@ public class DirectMappedCache extends Cache {
      */
     public void setVictimCache(PlainVictimCache victimCache) {
         this.victimCache = victimCache;
+    }
+
+    @Override
+    public String toString() {
+        if (prefetcher == null && victimCache == null) {
+            return "Plain";
+        } else if (prefetcher == null && victimCache != null) {
+            return "" + victimCache;
+        } else if (prefetcher != null && victimCache == null) {
+            return "" + prefetcher;
+        } else {
+            return prefetcher + "_" + victimCache;
+        }
     }
 }

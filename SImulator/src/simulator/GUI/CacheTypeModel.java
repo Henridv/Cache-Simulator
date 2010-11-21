@@ -20,9 +20,11 @@ public class CacheTypeModel implements ComboBoxModel{
      */
     public CacheTypeModel() {
         cacheTypes = new ArrayList<CacheType>();
-        cacheTypes.add(CacheType.DirectMappedCache);
-        cacheTypes.add(CacheType.DirectMappedCacheLinearPrefetch);
-        cacheTypes.add(CacheType.DirectMappedCacheScalablePrefetch);
+        cacheTypes.add(CacheType.Plain);
+        cacheTypes.add(CacheType.LinearPrefetch);
+        cacheTypes.add(CacheType.ScalablePrefetch);
+        cacheTypes.add(CacheType.LinearPrefetch_PlainVictimCache);
+        cacheTypes.add(CacheType.ScalablePrefetch_PlainVictimCache);
         current = cacheTypes.get(0);
     }
 

@@ -8,29 +8,29 @@ import java.util.LinkedList;
  */
 public class PlainVictimCache {
 
-    protected LinkedList<Integer> victimCache;
+    protected LinkedList<Long> victimCache;
     protected int size;
 
     public PlainVictimCache(int size) {
         this.size = size;
-        this.victimCache = new LinkedList<Integer>();
+        this.victimCache = new LinkedList<Long>();
     }
 
-    public boolean contains(int memAddress) {
+    public boolean contains(long memAddress) {
 
-        return victimCache.contains((Integer) memAddress);
+        return victimCache.contains((Long) memAddress);
     }
 
-    public void add(int memAddress) {
+    public void add(long memAddress) {
         victimCache.addFirst(memAddress);
         if(size > victimCache.size()) {
             victimCache.removeLast();
         }
     }
 
-    public boolean switchAddresses(int oldMemAddress, int newMemAddress) {
+    public boolean switchAddresses(long oldMemAddress, long newMemAddress) {
         victimCache.addFirst(newMemAddress);
-        return victimCache.remove((Integer) oldMemAddress);
+        return victimCache.remove((long) oldMemAddress);
     }
 
     /**
@@ -49,5 +49,10 @@ public class PlainVictimCache {
      */
     public void setSize(int size) {
         this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return "PlainVictimCache";
     }
 }

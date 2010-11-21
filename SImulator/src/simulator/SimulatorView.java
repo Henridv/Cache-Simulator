@@ -15,6 +15,7 @@ import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.table.TableModel;
 import simulator.GUI.CacheTypeModel;
 import simulator.parts.Cache;
 import simulator.tasks.TraceReadTask;
@@ -31,6 +32,7 @@ public class SimulatorView extends FrameView {
     public SimulatorView(SingleFrameApplication app) {
         super(app);
         cacheTypeModel = new CacheTypeModel();
+        currentRow = 0;
 
         initComponents();
         simulateButton.setEnabled(false);
@@ -115,6 +117,28 @@ public class SimulatorView extends FrameView {
         missesLabel.setText("" + cache.getMisses());
         hitrateLabel.setText("" + cache.getHitRate() * 100 + " %");
         missrateLabel.setText("" + cache.getMissRate() * 100 + " %");
+
+        updateTable();
+    }
+    protected int currentRow;
+
+
+    /**
+     * Update de tabel met een nieuwe rij waarden
+     */
+    public void updateTable() {
+        Cache cache = SimulatorApp.getApplication().getSimulator().getCache();
+        TableModel tableModel = outputTable.getModel();
+        tableModel.setValueAt(SimulatorApp.getApplication().getSimulator().getTraceFile().getName(), currentRow, 0);
+        tableModel.setValueAt(SimulatorApp.getApplication().getSimulator().getCache(), currentRow, 1);
+        tableModel.setValueAt(Simulator.CACHE_SIZE, currentRow, 2);
+        tableModel.setValueAt(Simulator.CACHE_ADDRESSES, currentRow, 3);
+        tableModel.setValueAt(Simulator.WORD_SIZE, currentRow, 4);
+        tableModel.setValueAt(cache.getHits(), currentRow, 5);
+        tableModel.setValueAt(cache.getMisses(), currentRow, 6);
+        tableModel.setValueAt(cache.getHitRate(), currentRow, 7);
+        tableModel.setValueAt(cache.getMissRate(), currentRow, 8);
+        currentRow++;
     }
 
     /** This method is called from within the constructor to
@@ -138,6 +162,8 @@ public class SimulatorView extends FrameView {
         jComboBox1 = new javax.swing.JComboBox();
         fileLabel = new javax.swing.JLabel();
         simulateButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        outputTable = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         Open = new javax.swing.JMenuItem();
@@ -194,6 +220,124 @@ public class SimulatorView extends FrameView {
             }
         });
 
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
+
+        outputTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Filename", "Cache", "Cache Size", "Cache Addresses", "Word Size", "Hits", "Misses", "Hitrate", "Missrate"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class, java.lang.Float.class, java.lang.Float.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        outputTable.setName("outputTable"); // NOI18N
+        jScrollPane2.setViewportView(outputTable);
+        outputTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("outputTable.columnModel.title0")); // NOI18N
+        outputTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("outputTable.columnModel.title1")); // NOI18N
+        outputTable.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("outputTable.columnModel.title2")); // NOI18N
+        outputTable.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("outputTable.columnModel.title3")); // NOI18N
+        outputTable.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("outputTable.columnModel.title4")); // NOI18N
+        outputTable.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("outputTable.columnModel.title5")); // NOI18N
+        outputTable.getColumnModel().getColumn(6).setHeaderValue(resourceMap.getString("outputTable.columnModel.title6")); // NOI18N
+        outputTable.getColumnModel().getColumn(7).setHeaderValue(resourceMap.getString("outputTable.columnModel.title7")); // NOI18N
+        outputTable.getColumnModel().getColumn(8).setHeaderValue(resourceMap.getString("outputTable.columnModel.title8")); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -201,28 +345,31 @@ public class SimulatorView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fileLabel)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(simulateButton))
-                .addGap(77, 77, 77)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 906, Short.MAX_VALUE)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
+                            .addComponent(fileLabel)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(simulateButton))
+                        .addGap(77, 77, 77)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(hitsLabel)
-                            .addComponent(missesLabel)))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(hitrateLabel))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(missrateLabel)))
-                .addContainerGap(158, Short.MAX_VALUE))
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addGap(18, 18, 18)
+                                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(hitsLabel)
+                                    .addComponent(missesLabel)))
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(hitrateLabel))
+                            .addGroup(mainPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(missrateLabel)))))
+                .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,7 +398,8 @@ public class SimulatorView extends FrameView {
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(simulateButton)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -299,11 +447,11 @@ public class SimulatorView extends FrameView {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 930, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 222, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 746, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -342,6 +490,7 @@ public class SimulatorView extends FrameView {
 
     }//GEN-LAST:event_OpenActionPerformed
 
+
     private void simulateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulateButtonActionPerformed
         SimulatorApp.getApplication().getSimulator().resetSimulator();
         TraceReadTask task = new TraceReadTask(SimulatorApp.getApplication().getSimulator().getTraceFile());
@@ -359,10 +508,12 @@ public class SimulatorView extends FrameView {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JLabel missesLabel;
     private javax.swing.JLabel missrateLabel;
+    private javax.swing.JTable outputTable;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton simulateButton;
     private javax.swing.JLabel statusAnimationLabel;

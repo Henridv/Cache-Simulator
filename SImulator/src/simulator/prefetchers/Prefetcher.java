@@ -11,7 +11,7 @@ public abstract class Prefetcher {
      * @param memory
      * @param memAddress
      */
-    public abstract void prefetchMemory(int[] memory, int memAddress);
+    public abstract void prefetchMemory(long[] memory, long memAddress);
     /**
      * 
      */
