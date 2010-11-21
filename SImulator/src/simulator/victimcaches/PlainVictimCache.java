@@ -23,7 +23,7 @@ public class PlainVictimCache {
 
     public void add(long memAddress) {
         victimCache.addFirst(memAddress);
-        if(size > victimCache.size()) {
+        if(size < victimCache.size()) {
             victimCache.removeLast();
         }
     }
