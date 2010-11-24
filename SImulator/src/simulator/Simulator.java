@@ -21,10 +21,6 @@ public class Simulator {
      *
      */
     public static final int CACHE_SIZE = (int) (1 * Math.pow(2, 20)); // in MiB
-    /**
-     *
-     */
-    public static final int MEM_ACCESS_TIME = 5; // Delay bij cachemis
 
     public static final int CACHE_ADDRESSES = CACHE_SIZE/WORD_SIZE;
     private CacheType currentCacheType;
@@ -65,7 +61,6 @@ public class Simulator {
         System.out.println("WORD SIZE: " + WORD_SIZE);
         System.out.println("CACHE_SIZE: " + CACHE_SIZE);
         System.out.println("ADDRESSES: " + CACHE_SIZE / WORD_SIZE);
-        System.out.println("MEM_ACCESS_TIME: " + MEM_ACCESS_TIME);
         currentCacheType = CacheType.Plain;
         _initCacheType();
     }
