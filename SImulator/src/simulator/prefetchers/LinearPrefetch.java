@@ -1,6 +1,7 @@
 package simulator.prefetchers;
 
 import simulator.Simulator;
+import simulator.victimcaches.PlainVictimCache;
 
 /**
  *
@@ -44,10 +45,13 @@ public class LinearPrefetch extends Prefetcher {
      * @param memory
      * @param memAddress
      */
-    public void prefetchMemory(long[] memory, long memAddress) {
+    public void prefetchMemory(long[] memory, long memAddress, PlainVictimCache victimCache) {
         int index;
         for (int i = 0; i < numberOfBlocks; i++) {
             index = (int) (((memAddress) + i) % Simulator.CACHE_ADDRESSES);
+            if (victimCache != null) {
+                victimCache.add(index);
+            }
             memory[index] = memAddress + i;
         }
     }
@@ -66,7 +70,6 @@ public class LinearPrefetch extends Prefetcher {
     @Override
     public void actionOnMiss() {
     }
-
 
     @Override
     public String toString() {

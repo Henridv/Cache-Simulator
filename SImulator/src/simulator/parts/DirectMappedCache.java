@@ -28,9 +28,10 @@ public class DirectMappedCache extends Cache {
      * @param prefetcher prefetch 
      */
     public DirectMappedCache(Prefetcher prefetcher, PlainVictimCache victimCache) {
-        cache = new long[Simulator.CACHE_ADDRESSES];
+        this.cache = new long[Simulator.CACHE_ADDRESSES];
         this.prefetcher = prefetcher;
         this.victimCache = victimCache;
+        this.simulator = SimulatorApp.getApplication().getSimulator();
     }
 
     /**
@@ -41,8 +42,6 @@ public class DirectMappedCache extends Cache {
      */
     @Override
     public boolean access(final long address) {
-
-        simulator = SimulatorApp.getApplication().getSimulator();
         boolean hit;
         final int cacheAddress = (int) ((address / Simulator.WORD_SIZE) % Simulator.CACHE_ADDRESSES);
         final long memAddress = (address / Simulator.WORD_SIZE);
@@ -58,26 +57,32 @@ public class DirectMappedCache extends Cache {
         {
             // Zoek in vitim cache als er victim cache is
             if (victimCache != null && victimCache.contains(memAddress)) {
-                // TODO: blijkbaar komt hij hier nooit
 
+                // Indien gevonden, verwissel het dan met de entry in de cache
                 victimCache.switchAddresses(cache[cacheAddress], memAddress);
                 cache[cacheAddress] = memAddress;
 
+                // Hit it
                 hit = true;
                 hits++;
 
             } else // Niet in victim cache en niet in cache => miss
             {
 
+                // Steek wat er nu in de cache zit in de victim cache
                 if (victimCache != null) {
-                    victimCache.add(memAddress);
+                    victimCache.add(cache[cacheAddress]);
                 }
+
+                // Haal het nieuwe uit het hoofdgeheugen en steek het in de cache
                 cache[cacheAddress] = memAddress;
-                // Call prefetcher if necessary
+
+                // Call prefetcher if necessary,
                 if (prefetcher != null) {
-                    prefetcher.prefetchMemory(cache, memAddress);
+                    prefetcher.prefetchMemory(cache, memAddress, victimCache);
                 }
                 hit = false;
+                
                 if (prefetcher != null) {
                     prefetcher.actionOnMiss();
                 }

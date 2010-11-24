@@ -26,8 +26,8 @@ public class TraceReadTask extends Task<Boolean, Integer> {
     public TraceReadTask(File trace) {
         super(SimulatorApp.getApplication());
         this.trace = trace;
-        simulator = SimulatorApp.getApplication().getSimulator();
-        simulatorView = (SimulatorView) SimulatorApp.getApplication().getMainView();
+        this.simulator = SimulatorApp.getApplication().getSimulator();
+        this.simulatorView = (SimulatorView) SimulatorApp.getApplication().getMainView();
     }
 
     /**
@@ -82,7 +82,7 @@ public class TraceReadTask extends Task<Boolean, Integer> {
                         }
                     }
                 }
-                setMessage("Finished");
+                setMessage("Finished file: " + file.getName());
                 in.close();
                 simulatorView.updateHitMisses(file);
             } else {
