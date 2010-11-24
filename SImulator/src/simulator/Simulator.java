@@ -105,11 +105,11 @@ public class Simulator {
         if (currentCacheType.equals(CacheType.Plain)) {
             cache = new DirectMappedCache(null, null);
         } else if(currentCacheType.equals(CacheType.LinearPrefetch)) {
-            cache = new DirectMappedCache(new LinearPrefetch(1), null);
+            cache = new DirectMappedCache(new LinearPrefetch(3), null);
         } else if(currentCacheType.equals(CacheType.ScalablePrefetch)) {
             cache = new DirectMappedCache(new ScalablePrefetch(), null);
         } else if(currentCacheType.equals(CacheType.LinearPrefetch_PlainVictimCache)) {
-            cache = new DirectMappedCache(new LinearPrefetch(1), new PlainVictimCache(10));
+            cache = new DirectMappedCache(new LinearPrefetch(3), new PlainVictimCache(10));
         } else if(currentCacheType.equals(CacheType.ScalablePrefetch_PlainVictimCache)) {
             cache = new DirectMappedCache(new ScalablePrefetch(), new PlainVictimCache(10));
         }
