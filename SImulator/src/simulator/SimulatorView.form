@@ -395,6 +395,8 @@
     <Component class="javax.swing.JFileChooser" name="fileChooser">
       <Properties>
         <Property name="dialogTitle" type="java.lang.String" resourceKey="fileChooser.dialogTitle"/>
+        <Property name="fileSelectionMode" type="int" value="2"/>
+        <Property name="font" type="java.awt.Font" resourceKey="fileChooser.font"/>
         <Property name="name" type="java.lang.String" value="fileChooser" noResource="true"/>
       </Properties>
     </Component>

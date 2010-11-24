@@ -8,46 +8,30 @@ import simulator.prefetchers.ScalablePrefetch;
 import simulator.victimcaches.PlainVictimCache;
 
 /**
- *
+ * Dit is de hoofdklasse van het project. Dit stelt de simulator voor. Dit wordt opgeroepen
+ * door TraceReadTask.
+ * 
  * @author Ruben Verhack
  */
 public class Simulator {
 
-    /**
-     *
-     */
     public static final int WORD_SIZE = 64;
-    /**
-     *
-     */
     public static final int CACHE_SIZE = (int) (1 * Math.pow(2, 20)); // in MiB
-
     public static final int CACHE_ADDRESSES = CACHE_SIZE/WORD_SIZE;
     private CacheType currentCacheType;
-    /**
-     *
-     */
     protected File traceFile;
     private Cache cache;
-    /**
-     *
-     */
-    protected long clock;
 
     /**
-     *
+     * Dit zijn de configuraties die mogelijk zijn. Als je hier één toevoegt
+     * dan moet je ook simulator.GUI.CacheTypeModel aanpassen (zodat je de dropdown
+     * kunt gebruiken), ook moet de if constructie bij _initCacheType() aangevuld
+     * worden. (Kweet niet de beste stijl)
      */
     public static enum CacheType {
 
-        /**
-         * 
-         */
         Plain,
-        /**
-         *
-         */
         LinearPrefetch,
-
         ScalablePrefetch,
         PlainVictimCache,
         LinearPrefetch_PlainVictimCache,
@@ -71,7 +55,6 @@ public class Simulator {
      * @return
      */
     public boolean memoryAccess(long parseInt) {
-        clock++;
         return cache.access(parseInt);
     }
 
@@ -96,6 +79,9 @@ public class Simulator {
         return currentCacheType;
     }
 
+    /**
+     * Initialiseer de cache
+     */
     private void _initCacheType() {
         if (currentCacheType.equals(CacheType.Plain)) {
             cache = new DirectMappedCache(null, null);
@@ -111,7 +97,7 @@ public class Simulator {
     }
 
     /**
-     *
+     * Reset
      */
     public void resetSimulator() {
         _initCacheType();
@@ -135,12 +121,4 @@ public class Simulator {
         this.traceFile = traceFile;
     }
 
-    /**
-     * Get the value of clock
-     *
-     * @return the value of clock
-     */
-    public long getClock() {
-        return clock;
-    }
 }

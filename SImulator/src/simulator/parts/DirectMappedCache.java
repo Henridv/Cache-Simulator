@@ -6,7 +6,10 @@ import simulator.prefetchers.Prefetcher;
 import simulator.victimcaches.PlainVictimCache;
 
 /**
- *
+ * Dit is de hoofdcache van het project. Dit is een standaard direct mapped cache
+ * dat als er een prefetch en/of victim cache wordt meegegeven in de constructor
+ * hier dan ook rekening mee houdt.
+ * 
  * @author Ruben Verhack
  */
 public class DirectMappedCache extends Cache {
@@ -21,7 +24,8 @@ public class DirectMappedCache extends Cache {
 
     /**
      *
-     * @param prefetcher
+     *
+     * @param prefetcher prefetch 
      */
     public DirectMappedCache(Prefetcher prefetcher, PlainVictimCache victimCache) {
         cache = new long[Simulator.CACHE_ADDRESSES];

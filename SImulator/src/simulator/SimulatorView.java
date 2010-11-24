@@ -10,6 +10,7 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
@@ -111,25 +112,24 @@ public class SimulatorView extends FrameView {
     /**
      *
      */
-    public void updateHitMisses() {
+    public void updateHitMisses(File file) {
         Cache cache = SimulatorApp.getApplication().getSimulator().getCache();
         hitsLabel.setText("" + cache.getHits());
         missesLabel.setText("" + cache.getMisses());
         hitrateLabel.setText("" + cache.getHitRate() * 100 + " %");
         missrateLabel.setText("" + cache.getMissRate() * 100 + " %");
 
-        updateTable();
+        updateTable(file);
     }
     protected int currentRow;
-
 
     /**
      * Update de tabel met een nieuwe rij waarden
      */
-    public void updateTable() {
+    public void updateTable(File file) {
         Cache cache = SimulatorApp.getApplication().getSimulator().getCache();
         TableModel tableModel = outputTable.getModel();
-        tableModel.setValueAt(SimulatorApp.getApplication().getSimulator().getTraceFile().getName(), currentRow, 0);
+        tableModel.setValueAt(file.getName(), currentRow, 0);
         tableModel.setValueAt(SimulatorApp.getApplication().getSimulator().getCache(), currentRow, 1);
         tableModel.setValueAt(Simulator.CACHE_SIZE, currentRow, 2);
         tableModel.setValueAt(Simulator.CACHE_ADDRESSES, currentRow, 3);
@@ -470,6 +470,8 @@ public class SimulatorView extends FrameView {
         );
 
         fileChooser.setDialogTitle(resourceMap.getString("fileChooser.dialogTitle")); // NOI18N
+        fileChooser.setFileSelectionMode(javax.swing.JFileChooser.FILES_AND_DIRECTORIES);
+        fileChooser.setFont(resourceMap.getFont("fileChooser.font")); // NOI18N
         fileChooser.setName("fileChooser"); // NOI18N
 
         setComponent(mainPanel);
@@ -481,15 +483,16 @@ public class SimulatorView extends FrameView {
 
         int returnVal = fileChooser.showOpenDialog(mainPanel);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            SimulatorApp.getApplication().getSimulator().setTraceFile(fileChooser.getSelectedFile());
-            fileLabel.setText(fileChooser.getSelectedFile().getName());
-            simulateButton.setEnabled(true);
+                SimulatorApp.getApplication().getSimulator().setTraceFile(fileChooser.getSelectedFile());
+                fileLabel.setText(fileChooser.getSelectedFile().getName());
+                simulateButton.setEnabled(true);
+
+         
         } else {
             System.out.println("File access cancelled by user.");
         }
 
     }//GEN-LAST:event_OpenActionPerformed
-
 
     private void simulateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulateButtonActionPerformed
         SimulatorApp.getApplication().getSimulator().resetSimulator();
