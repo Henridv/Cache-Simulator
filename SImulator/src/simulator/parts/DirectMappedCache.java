@@ -46,6 +46,8 @@ public class DirectMappedCache extends Cache {
         boolean hit;
         final int cacheAddress = (int) ((address / simulator.getWordSize()) % simulator.getCacheAddresses());
         final long memAddress = (address / simulator.getWordSize());
+//        final int cacheAddress = (int) ((address) % simulator.getCacheAddresses());
+//        final long memAddress = (address);
 
         // Zoek in cache
         if (cache[cacheAddress] == memAddress) {
@@ -66,6 +68,7 @@ public class DirectMappedCache extends Cache {
                 // Hit it
                 hit = true;
                 hits++;
+        System.out.println(address + " " + memAddress + " " + cacheAddress + "HIT");
 
             } else // Niet in victim cache en niet in cache => miss
             {
@@ -83,11 +86,12 @@ public class DirectMappedCache extends Cache {
                     prefetcher.prefetchMemory(cache, memAddress, victimCache);
                 }
                 hit = false;
-                
+
                 if (prefetcher != null) {
                     prefetcher.actionOnMiss();
                 }
                 misses++;
+        System.out.println(address + " " + memAddress + " " + cacheAddress + " MISS " + misses);
             }
         }
 

@@ -15,7 +15,7 @@ import simulator.victimcaches.PlainVictimCache;
  */
 public class Simulator {
 
-    public int wordSize = 64;
+    public int wordSize = 64*4;
     public int cacheSize; // in MiB
     public int cacheAddresses;
     private CacheType currentCacheType;
