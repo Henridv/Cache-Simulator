@@ -27,8 +27,9 @@ public class DirectMappedCache extends Cache {
      *
      * @param prefetcher prefetch 
      */
-    public DirectMappedCache(Prefetcher prefetcher, PlainVictimCache victimCache) {
-        this.cache = new long[Simulator.CACHE_ADDRESSES];
+    public DirectMappedCache(int cacheSize, Prefetcher prefetcher, PlainVictimCache victimCache) {
+        this.simulator = SimulatorApp.getApplication().getSimulator();
+        this.cache = new long[cacheSize];
         this.prefetcher = prefetcher;
         this.victimCache = victimCache;
         this.simulator = SimulatorApp.getApplication().getSimulator();
@@ -43,8 +44,8 @@ public class DirectMappedCache extends Cache {
     @Override
     public boolean access(final long address) {
         boolean hit;
-        final int cacheAddress = (int) ((address / Simulator.WORD_SIZE) % Simulator.CACHE_ADDRESSES);
-        final long memAddress = (address / Simulator.WORD_SIZE);
+        final int cacheAddress = (int) ((address / simulator.getWordSize()) % simulator.getCacheAddresses());
+        final long memAddress = (address / simulator.getWordSize());
 
         // Zoek in cache
         if (cache[cacheAddress] == memAddress) {

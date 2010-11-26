@@ -27,7 +27,7 @@ public class TraceReadTask extends Task<Boolean, Integer> {
         super(SimulatorApp.getApplication());
         this.trace = trace;
         this.simulator = SimulatorApp.getApplication().getSimulator();
-        this.simulatorView = (SimulatorView) SimulatorApp.getApplication().getMainView();
+        this.simulatorView = SimulatorApp.getApplication().getSimulatorView();
     }
 
     /**

@@ -13,6 +13,8 @@ import org.jdesktop.application.SingleFrameApplication;
  */
 public class SimulatorApp extends SingleFrameApplication {
 
+    protected SimulatorView simulatorView;
+
     /**
      *
      */
@@ -32,10 +34,14 @@ public class SimulatorApp extends SingleFrameApplication {
      */
     @Override protected void startup() {
 
+        simulatorView = new SimulatorView(this);
         this.simulator = new Simulator();
-        SimulatorView simulatorView = new SimulatorView(this);
         show(simulatorView);
 
+    }
+
+    public SimulatorView getSimulatorView() {
+        return simulatorView;
     }
 
     /**

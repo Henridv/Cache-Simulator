@@ -15,12 +15,77 @@ import simulator.victimcaches.PlainVictimCache;
  */
 public class Simulator {
 
-    public static final int WORD_SIZE = 64;
-    public static final int CACHE_SIZE = (int) (1 * Math.pow(2, 20)); // in MiB
-    public static final int CACHE_ADDRESSES = CACHE_SIZE/WORD_SIZE;
+    public int wordSize = 64;
+    public int cacheSize; // in MiB
+    public int cacheAddresses;
     private CacheType currentCacheType;
     protected File traceFile;
     private Cache cache;
+    protected int prefetchOffset;
+    protected int victimSize;
+    private SimulatorView simulatorView;
+
+    public int getCacheAddresses() {
+        return cacheAddresses;
+    }
+
+    public void setCacheAddresses(int cache_addresses) {
+        this.cacheAddresses = cache_addresses;
+    }
+
+    public int getCacheSize() {
+        return cacheSize;
+    }
+
+    public void setCacheSize(int cache_size) {
+        this.cacheSize = cache_size;
+    }
+
+    public int getWordSize() {
+        return wordSize;
+    }
+
+    public void setWordSize(int word_size) {
+        this.wordSize = word_size;
+    }
+
+    /**
+     * Get the value of victimSize
+     *
+     * @return the value of victimSize
+     */
+    public int getVictimSize() {
+        return victimSize;
+    }
+
+    /**
+     * Set the value of victimSize
+     *
+     * @param victimSize new value of victimSize
+     */
+    public void setVictimSize(int victimSize) {
+        this.victimSize = victimSize;
+    }
+
+
+    /**
+     * Get the value of prefetchOffset
+     *
+     * @return the value of prefetchOffset
+     */
+    public int getPrefetchOffset() {
+        return prefetchOffset;
+    }
+
+    /**
+     * Set the value of prefetchOffset
+     *
+     * @param prefetchOffset new value of prefetchOffset
+     */
+    public void setPrefetchOffset(int prefetchOffset) {
+        this.prefetchOffset = prefetchOffset;
+    }
+
 
     /**
      * Dit zijn de configuraties die mogelijk zijn. Als je hier één toevoegt
@@ -42,9 +107,9 @@ public class Simulator {
      *
      */
     public Simulator() {
-        System.out.println("WORD SIZE: " + WORD_SIZE);
-        System.out.println("CACHE_SIZE: " + CACHE_SIZE);
-        System.out.println("ADDRESSES: " + CACHE_SIZE / WORD_SIZE);
+        System.out.println("WORD SIZE: " + wordSize);
+        System.out.println("CACHE_SIZE: " + cacheSize);
+        System.out.println("ADDRESSES: " + cacheSize / wordSize);
         currentCacheType = CacheType.Plain;
         _initCacheType();
     }
@@ -83,16 +148,23 @@ public class Simulator {
      * Initialiseer de cache
      */
     private void _initCacheType() {
+        System.out.println(SimulatorApp.getApplication().getMainView());
+        simulatorView = (SimulatorView) SimulatorApp.getApplication().getSimulatorView();
+        cacheSize = (int) (simulatorView.getCacheSize() * Math.pow(2, 20));
+        cacheAddresses = cacheSize/wordSize;
+        victimSize = simulatorView.getVictimCacheSize();
+        prefetchOffset = simulatorView.getPrefetchOffset();
+
         if (currentCacheType.equals(CacheType.Plain)) {
-            cache = new DirectMappedCache(null, null);
+            cache = new DirectMappedCache(cacheAddresses, null, null);
         } else if(currentCacheType.equals(CacheType.LinearPrefetch)) {
-            cache = new DirectMappedCache(new LinearPrefetch(3), null);
+            cache = new DirectMappedCache(cacheAddresses, new LinearPrefetch(prefetchOffset), null);
         } else if(currentCacheType.equals(CacheType.ScalablePrefetch)) {
-            cache = new DirectMappedCache(new ScalablePrefetch(), null);
+            cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), null);
         } else if(currentCacheType.equals(CacheType.LinearPrefetch_PlainVictimCache)) {
-            cache = new DirectMappedCache(new LinearPrefetch(3), new PlainVictimCache(10));
+            cache = new DirectMappedCache(cacheAddresses, new LinearPrefetch(prefetchOffset), new PlainVictimCache(victimSize));
         } else if(currentCacheType.equals(CacheType.ScalablePrefetch_PlainVictimCache)) {
-            cache = new DirectMappedCache(new ScalablePrefetch(), new PlainVictimCache(10));
+            cache = new DirectMappedCache(cacheAddresses,new ScalablePrefetch(), new PlainVictimCache(victimSize));
         }
     }
 
