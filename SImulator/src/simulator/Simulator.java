@@ -1,10 +1,12 @@
 package simulator;
 
 import java.io.File;
+import simulator.parts.AssocCache;
 import simulator.parts.Cache;
 import simulator.parts.DirectMappedCache;
 import simulator.prefetchers.LinearPrefetch;
 import simulator.prefetchers.ScalablePrefetch;
+import simulator.victimcaches.CountingPredictor;
 import simulator.victimcaches.PlainVictimCache;
 
 /**
@@ -15,7 +17,7 @@ import simulator.victimcaches.PlainVictimCache;
  */
 public class Simulator {
 
-    public int wordSize = 64*4;
+    public int wordSize = 8*4;
     public int cacheSize; // in MiB
     public int cacheAddresses;
     private CacheType currentCacheType;
@@ -100,7 +102,9 @@ public class Simulator {
         ScalablePrefetch,
         PlainVictimCache,
         LinearPrefetch_PlainVictimCache,
-        ScalablePrefetch_PlainVictimCache
+        ScalablePrefetch_PlainVictimCache,
+        Assoc,
+        AssocCounter
     };
 
     /**
@@ -165,6 +169,10 @@ public class Simulator {
             cache = new DirectMappedCache(cacheAddresses, new LinearPrefetch(prefetchOffset), new PlainVictimCache(victimSize));
         } else if(currentCacheType.equals(CacheType.ScalablePrefetch_PlainVictimCache)) {
             cache = new DirectMappedCache(cacheAddresses,new ScalablePrefetch(), new PlainVictimCache(victimSize));
+        } else if(currentCacheType.equals(CacheType.Assoc)) {
+            cache = new AssocCache((int)Math.pow(2, 10), 2, null);
+        } else if(currentCacheType.equals(CacheType.AssocCounter)) {
+            cache = new AssocCache((int)Math.pow(2, 10), 2, new CountingPredictor());
         }
     }
 
