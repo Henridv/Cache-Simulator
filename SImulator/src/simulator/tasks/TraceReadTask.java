@@ -72,13 +72,14 @@ public class TraceReadTask extends Task<Boolean, Integer> {
                 while ((str = in.readLine()) != null) {
                     if (!str.equals("") && !str.equals("#eof")) {
                         try {
-                            count++;
                             simulator.memoryAccess(Long.parseLong(str));
+                            count++;
                             progress = (float) count / total;
                             setMessage("Reading accesses");
                             setProgress(progress);
                         } catch (NumberFormatException ex) {
                             System.err.println("WARNING: Could not parse long: '" + str + "'");
+
                         }
                     }
                 }
@@ -91,5 +92,4 @@ public class TraceReadTask extends Task<Boolean, Integer> {
         }
         return true;
     }
-
 }

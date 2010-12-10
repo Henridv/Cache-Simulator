@@ -82,7 +82,7 @@
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" pref="263" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="275" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -129,7 +129,7 @@
                     <Column editable="false" title="Cache" type="java.lang.String"/>
                     <Column editable="false" title="Cache Size" type="java.lang.Long"/>
                     <Column editable="false" title="Cache Addresses" type="java.lang.Long"/>
-                    <Column editable="false" title="Word Size" type="java.lang.Long"/>
+                    <Column editable="false" title="Block Size" type="java.lang.Long"/>
                     <Column editable="false" title="Prefetch Offset" type="java.lang.Integer"/>
                     <Column editable="false" title="Victim Size" type="java.lang.Integer"/>
                     <Column editable="false" title="Hits" type="java.lang.Long"/>
@@ -242,7 +242,7 @@
         <Component class="javax.swing.JSpinner" name="cacheSpinner">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-              <SpinnerModel initial="1" maximum="8" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+              <SpinnerModel initial="512" maximum="2048" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
             </Property>
             <Property name="name" type="java.lang.String" value="cacheSpinner" noResource="true"/>
           </Properties>

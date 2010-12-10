@@ -33,6 +33,11 @@ public class DirectMappedCache extends Cache {
         this.prefetcher = prefetcher;
         this.victimCache = victimCache;
         this.simulator = SimulatorApp.getApplication().getSimulator();
+        this.hits = 0;
+        this.misses = 0;
+        for (int i = 0; i < cacheSize; i++) {
+            this.cache[i] = 0;
+        }
     }
 
     /**
@@ -44,10 +49,11 @@ public class DirectMappedCache extends Cache {
     @Override
     public boolean access(final long address) {
         boolean hit;
-        final int cacheAddress = (int) ((address / simulator.getWordSize()) % simulator.getCacheAddresses());
-        final long memAddress = (address / simulator.getWordSize());
-//        final int cacheAddress = (int) ((address) % simulator.getCacheAddresses());
-//        final long memAddress = (address);
+//        System.out.println(address + " "+ simulator.getBlockSize() + " " + (address / simulator.getBlockSize()) + " " + simulator.getCacheAddresses());
+        final int cacheAddress = (int) (((long) ((address / simulator.getBlockSize()))) % simulator.getCacheAddresses());
+//        System.out.println((address / simulator.getBlockSize() + " " +((long) ((address / simulator.getBlockSize())))) +" " +(((long) ((address / simulator.getBlockSize()))) % simulator.getCacheAddresses()) + " "+cacheAddress);
+//        System.out.println(Long.MAX_VALUE);
+        final long memAddress = (address / simulator.getBlockSize());
 
         // Zoek in cache
         if (cache[cacheAddress] == memAddress) {
@@ -56,44 +62,41 @@ public class DirectMappedCache extends Cache {
                 prefetcher.actionOnHit();
             }
             hits++;
+//            System.out.println(address + "\n" + memAddress + " " + cacheAddress + " HIT " + hits);
         } else // Indien niet in cache
+        if (victimCache != null && victimCache.contains(memAddress)) // Zoek in vitim cache als er victim cache is
         {
-            // Zoek in vitim cache als er victim cache is
-            if (victimCache != null && victimCache.contains(memAddress)) {
+//            System.out.println("test");
+            // Indien gevonden, verwissel het dan met de entry in de cache
+            victimCache.switchAddresses(cache[cacheAddress], memAddress);
+            cache[cacheAddress] = memAddress;
 
-                // Indien gevonden, verwissel het dan met de entry in de cache
-                victimCache.switchAddresses(cache[cacheAddress], memAddress);
-                cache[cacheAddress] = memAddress;
+            // Hit it
+            hit = true;
+            hits++;
+//            System.out.println(address + " " + memAddress + " " + cacheAddress + "HIT (VICTIM)");
 
-                // Hit it
-                hit = true;
-                hits++;
-        System.out.println(address + " " + memAddress + " " + cacheAddress + "HIT");
+        } else // Niet in victim cache en niet in cache => miss
+        {
 
-            } else // Niet in victim cache en niet in cache => miss
-            {
-
-                // Steek wat er nu in de cache zit in de victim cache
-                if (victimCache != null) {
-                    victimCache.add(cache[cacheAddress]);
-                }
-
-                // Haal het nieuwe uit het hoofdgeheugen en steek het in de cache
-                cache[cacheAddress] = memAddress;
-
-                // Call prefetcher if necessary,
-                if (prefetcher != null) {
-                    prefetcher.prefetchMemory(cache, memAddress, victimCache);
-                }
-                hit = false;
-
-                if (prefetcher != null) {
-                    prefetcher.actionOnMiss();
-                }
-                misses++;
-        System.out.println(address + " " + memAddress + " " + cacheAddress + " MISS " + misses);
+            // Steek wat er nu in de cache zit in de victim cache
+            if (victimCache != null) {
+                victimCache.add(cache[cacheAddress]);
             }
+
+            // Haal het nieuwe uit het hoofdgeheugen en steek het in de cache
+            cache[cacheAddress] = memAddress;
+
+            // Call prefetcher if necessary,
+            if (prefetcher != null) {
+                prefetcher.prefetchMemory(cache, memAddress, victimCache);
+                prefetcher.actionOnMiss();
+            }
+            hit = false;
+            misses++;
+//            System.out.println(address + "\n" + memAddress + " " + cacheAddress + " MISS " + misses);
         }
+
 
         return hit;
     }

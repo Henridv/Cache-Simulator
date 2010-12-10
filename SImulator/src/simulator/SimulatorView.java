@@ -131,7 +131,7 @@ public class SimulatorView extends FrameView {
         tableModel.setValueAt(simulator.getCache(), currentRow, 1);
         tableModel.setValueAt(simulator.getCacheSize(), currentRow, 2);
         tableModel.setValueAt(simulator.getCacheAddresses(), currentRow, 3);
-        tableModel.setValueAt(simulator.getWordSize(), currentRow, 4);
+        tableModel.setValueAt(simulator.getBlockSize(), currentRow, 4);
         tableModel.setValueAt(simulator.getPrefetchOffset(), currentRow, 5);
         tableModel.setValueAt(simulator.getVictimSize(), currentRow, 6);
         tableModel.setValueAt(cache.getHits(), currentRow, 7);
@@ -297,7 +297,7 @@ public class SimulatorView extends FrameView {
                 {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Filename", "Cache", "Cache Size", "Cache Addresses", "Word Size", "Prefetch Offset", "Victim Size", "Hits", "Misses", "Hitrate", "Missrate"
+                "Filename", "Cache", "Cache Size", "Cache Addresses", "Block Size", "Prefetch Offset", "Victim Size", "Hits", "Misses", "Hitrate", "Missrate"
             }
         ) {
             Class[] types = new Class [] {
@@ -344,7 +344,7 @@ public class SimulatorView extends FrameView {
         jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
 
-        cacheSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 8, 1));
+        cacheSpinner.setModel(new javax.swing.SpinnerNumberModel(512, 1, 2048, 1));
         cacheSpinner.setName("cacheSpinner"); // NOI18N
 
         jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
@@ -417,7 +417,7 @@ public class SimulatorView extends FrameView {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(simulateButton)))
                 .addGap(6, 6, 6)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
         );
 
         menuBar.setName("menuBar"); // NOI18N

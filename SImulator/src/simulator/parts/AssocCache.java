@@ -31,7 +31,7 @@ public class AssocCache extends Cache {
 
 	public AssocCache(int cacheSize, int sets, final IDeadblockPredictor predictor) {
 		this.simulator = SimulatorApp.getApplication().getSimulator();
-		this.blockSize = simulator.getWordSize();
+		this.blockSize = simulator.getBlockSize();
 		this.offset = (int) (Math.log(blockSize) / Math.log(2));
 		this.setIndex = (int) (Math.log(sets) / Math.log(2));
 

@@ -17,7 +17,7 @@ import simulator.victimcaches.PlainVictimCache;
  */
 public class Simulator {
 
-    public int wordSize = 8*4;
+    public int blockSize = 8*4;
     public int cacheSize; // in MiB
     public int cacheAddresses;
     private CacheType currentCacheType;
@@ -43,12 +43,12 @@ public class Simulator {
         this.cacheSize = cache_size;
     }
 
-    public int getWordSize() {
-        return wordSize;
+    public int getBlockSize() {
+        return blockSize;
     }
 
-    public void setWordSize(int word_size) {
-        this.wordSize = word_size;
+    public void setBlockSize(int word_size) {
+        this.blockSize = word_size;
     }
 
     /**
@@ -111,9 +111,9 @@ public class Simulator {
      *
      */
     public Simulator() {
-        System.out.println("WORD SIZE: " + wordSize);
+        System.out.println("WORD SIZE: " + blockSize);
         System.out.println("CACHE_SIZE: " + cacheSize);
-        System.out.println("ADDRESSES: " + cacheSize / wordSize);
+        System.out.println("ADDRESSES: " + cacheSize / blockSize);
         currentCacheType = CacheType.Plain;
         _initCacheType();
     }
@@ -152,10 +152,10 @@ public class Simulator {
      * Initialiseer de cache
      */
     private void _initCacheType() {
-        System.out.println(SimulatorApp.getApplication().getMainView());
         simulatorView = (SimulatorView) SimulatorApp.getApplication().getSimulatorView();
-        cacheSize = (int) (simulatorView.getCacheSize() * Math.pow(2, 20));
-        cacheAddresses = cacheSize/wordSize;
+        cacheSize = (int) (simulatorView.getCacheSize() * Math.pow(2, 10));
+        //cacheSize = (int) Math.pow(2, 10);
+        cacheAddresses = cacheSize/blockSize;
         victimSize = simulatorView.getVictimCacheSize();
         prefetchOffset = simulatorView.getPrefetchOffset();
 
