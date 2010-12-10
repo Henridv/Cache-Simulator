@@ -25,9 +25,21 @@ public class CountingPredictor implements IDeadblockPredictor {
 		if (pcs.get(cacheBlock) == null)
 			pcs.put(cacheBlock, programCounter);
 
+
 		ArrayList<Long> pair = new ArrayList<Long>();
-		pair.add(cacheBlock);
-		pair.add(pcs.get(cacheBlock));
+
+//		for (ArrayList<Long> pair_temp : counter.keySet()) {
+//			if (pair_temp.get(0) == cacheBlock && pair_temp.get(1) == cacheBlock) {
+//				pair = pair_temp;
+//				break;
+//			}
+//		}
+
+		if (pair.isEmpty()) {
+			pair = new ArrayList<Long>(2);
+			pair.add(cacheBlock);
+			pair.add(pcs.get(cacheBlock));
+		}
 
 		if (history.get(pair) == null) {
 			// cacheBlock has never been evicted
@@ -46,11 +58,11 @@ public class CountingPredictor implements IDeadblockPredictor {
 			// cacheBlock is predicted dead after this reference
 			if (count != 0L) {
 				counter.put(pair, count);
-				deadBlocks.remove(cacheBlock);
 				return false;
 			} else {
 				counter.put(pair, 0L);
-				deadBlocks.add(cacheBlock);
+				if (!deadBlocks.contains(cacheBlock))
+					deadBlocks.add(cacheBlock);
 				return true;
 			}
 		}
@@ -63,6 +75,9 @@ public class CountingPredictor implements IDeadblockPredictor {
 		if (history.get(pair) == null) {
 			pcs.remove(cacheBlock);
 			history.put(pair, counter.get(pair));
+		} else {
+			deadBlocks.remove(cacheBlock);
+			counter.put(pair, history.get(pair));
 		}
 	}
 
