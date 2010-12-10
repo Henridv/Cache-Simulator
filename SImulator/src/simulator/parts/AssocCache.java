@@ -117,4 +117,9 @@ public class AssocCache extends Cache {
 	public String toString() {
 		return "Associative";
 	}
+
+    @Override
+    public boolean access(long parseInt, long programCounter) {
+        return access(parseInt);
+    }
 }

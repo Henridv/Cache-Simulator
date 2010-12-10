@@ -79,4 +79,6 @@ public abstract class Cache {
      */
     public abstract boolean access(long address);
 
+    public abstract boolean access(long parseInt, long programCounter);
+
 }

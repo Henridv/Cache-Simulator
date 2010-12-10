@@ -68,11 +68,22 @@ public class TraceReadTask extends Task<Boolean, Integer> {
                 in = new BufferedReader(new FileReader(file.getAbsolutePath()));
                 String str;
                 long count = 0;
+                long address = 0;
+                long programCounter = 0;
+                int indexOfColon = 0;
                 float progress = 0;
                 while ((str = in.readLine()) != null) {
                     if (!str.equals("") && !str.equals("#eof")) {
                         try {
-                            simulator.memoryAccess(Long.parseLong(str));
+                            indexOfColon = str.indexOf(':');
+                            if (indexOfColon > 0) {
+                                address = Long.parseLong(str.substring(indexOfColon+1));
+                                programCounter = Long.parseLong(str.substring(0, indexOfColon-1));
+                                simulator.memoryAccess(address, programCounter);
+                            } else {
+                                address = Long.parseLong(str);
+                                simulator.memoryAccess(address);
+                            }
                             count++;
                             progress = (float) count / total;
                             setMessage("Reading accesses");

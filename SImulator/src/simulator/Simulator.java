@@ -144,6 +144,10 @@ public class Simulator {
         return cache.access(parseInt);
     }
 
+    public boolean memoryAccess(long parseInt, long programCounter) {
+        return cache.access(parseInt, programCounter);
+    }
+
     /**
      * 
      * @return

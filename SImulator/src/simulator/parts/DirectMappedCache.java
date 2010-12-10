@@ -40,6 +40,8 @@ public class DirectMappedCache extends Cache {
         }
     }
 
+
+
     /**
      * Simuleer een geheugentoegang en tel het aantal hits en misses in de cache
      * Eventueel gebruikmakend van prefetch en victimcache
@@ -101,6 +103,11 @@ public class DirectMappedCache extends Cache {
         return hit;
     }
 
+    @Override
+    public boolean access(long parseInt, long programCounter) {
+        return access(parseInt);
+    }
+
     /**
      * Get the value of prefetcher
      *
@@ -149,4 +156,5 @@ public class DirectMappedCache extends Cache {
             return prefetcher + "_" + victimCache;
         }
     }
+
 }
