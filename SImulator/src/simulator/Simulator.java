@@ -183,15 +183,15 @@ public class Simulator {
         ways = simulatorView.getAssocSetsNumber();
 
         if (currentCacheType.equals(CacheType.Plain)) {
-            cache = new DirectMappedCache(cacheAddresses, null, null);
+            cache = new DirectMappedCache(cacheAddresses, null, null, false);
         } else if (currentCacheType.equals(CacheType.LinearPrefetch)) {
-            cache = new DirectMappedCache(cacheAddresses, new LinearPrefetch(prefetchOffset), null);
+            cache = new DirectMappedCache(cacheAddresses, new LinearPrefetch(prefetchOffset), null, false);
         } else if (currentCacheType.equals(CacheType.ScalablePrefetch)) {
-            cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), null);
+            cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), null, false);
         } else if (currentCacheType.equals(CacheType.LinearPrefetch_PlainVictimCache)) {
-            cache = new DirectMappedCache(cacheAddresses, new LinearPrefetch(prefetchOffset), new PlainVictimCache(victimSize));
+            cache = new DirectMappedCache(cacheAddresses, new LinearPrefetch(prefetchOffset), new PlainVictimCache(victimSize), false);
         } else if (currentCacheType.equals(CacheType.ScalablePrefetch_PlainVictimCache)) {
-            cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), new PlainVictimCache(victimSize));
+            cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), new PlainVictimCache(victimSize), false);
         } else if (currentCacheType.equals(CacheType.Assoc)) {
             cache = new AssocCache(cacheSize, ways, null);
         } else if (currentCacheType.equals(CacheType.AssocCounter)) {

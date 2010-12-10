@@ -21,13 +21,14 @@ public class DirectMappedCache extends Cache {
      */
     protected Prefetcher prefetcher;
     protected PlainVictimCache victimCache;
+    protected boolean isL1Cache;
 
     /**
      *
      *
      * @param prefetcher prefetch 
      */
-    public DirectMappedCache(int cacheSize, Prefetcher prefetcher, PlainVictimCache victimCache) {
+    public DirectMappedCache(int cacheSize, Prefetcher prefetcher, PlainVictimCache victimCache, boolean isL1Cache) {
         this.simulator = SimulatorApp.getApplication().getSimulator();
         this.cache = new long[cacheSize];
         this.prefetcher = prefetcher;
@@ -35,12 +36,11 @@ public class DirectMappedCache extends Cache {
         this.simulator = SimulatorApp.getApplication().getSimulator();
         this.hits = 0;
         this.misses = 0;
+        this.isL1Cache = isL1Cache;
         for (int i = 0; i < cacheSize; i++) {
             this.cache[i] = 0;
         }
     }
-
-
 
     /**
      * Simuleer een geheugentoegang en tel het aantal hits en misses in de cache
@@ -50,11 +50,17 @@ public class DirectMappedCache extends Cache {
      */
     @Override
     public boolean access(final long address) {
+        final int cacheAddress;
         boolean hit;
 //        System.out.println(address + " "+ simulator.getBlockSize() + " " + (address / simulator.getBlockSize()) + " " + simulator.getCacheAddresses());
-        final int cacheAddress = (int) (((long) ((address / simulator.getBlockSize()))) % simulator.getCacheAddresses());
 //        System.out.println((address / simulator.getBlockSize() + " " +((long) ((address / simulator.getBlockSize())))) +" " +(((long) ((address / simulator.getBlockSize()))) % simulator.getCacheAddresses()) + " "+cacheAddress);
 //        System.out.println(Long.MAX_VALUE);
+        if (isL1Cache) {
+            cacheAddress = (int) (((long) ((address / simulator.getBlockSize()))) % (cache.length));
+        } else {
+            cacheAddress = (int) (((long) ((address / simulator.getBlockSize()))) % simulator.getCacheAddresses());
+        }
+
         final long memAddress = (address / simulator.getBlockSize());
 
         // Zoek in cache
@@ -64,11 +70,9 @@ public class DirectMappedCache extends Cache {
                 prefetcher.actionOnHit();
             }
             hits++;
-//            System.out.println(address + "\n" + memAddress + " " + cacheAddress + " HIT " + hits);
         } else // Indien niet in cache
         if (victimCache != null && victimCache.contains(memAddress)) // Zoek in vitim cache als er victim cache is
         {
-//            System.out.println("test");
             // Indien gevonden, verwissel het dan met de entry in de cache
             victimCache.switchAddresses(cache[cacheAddress], memAddress);
             cache[cacheAddress] = memAddress;
@@ -76,7 +80,6 @@ public class DirectMappedCache extends Cache {
             // Hit it
             hit = true;
             hits++;
-//            System.out.println(address + " " + memAddress + " " + cacheAddress + "HIT (VICTIM)");
 
         } else // Niet in victim cache en niet in cache => miss
         {
@@ -156,5 +159,4 @@ public class DirectMappedCache extends Cache {
             return prefetcher + "_" + victimCache;
         }
     }
-
 }
