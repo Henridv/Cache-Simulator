@@ -17,7 +17,7 @@ import simulator.victimcaches.PlainVictimCache;
  */
 public class Simulator {
 
-    public int blockSize = 8*4;
+    public int blockSize = 8 * 4;
     public int cacheSize; // in MiB
     public int cacheAddresses;
     private CacheType currentCacheType;
@@ -26,6 +26,25 @@ public class Simulator {
     protected int prefetchOffset;
     protected int victimSize;
     private SimulatorView simulatorView;
+    protected int ways;
+
+    /**
+     * Get the value of ways
+     *
+     * @return the value of ways
+     */
+    public int getWays() {
+        return ways;
+    }
+
+    /**
+     * Set the value of ways
+     *
+     * @param ways new value of ways
+     */
+    public void setWays(int ways) {
+        this.ways = ways;
+    }
 
     public int getCacheAddresses() {
         return cacheAddresses;
@@ -69,7 +88,6 @@ public class Simulator {
         this.victimSize = victimSize;
     }
 
-
     /**
      * Get the value of prefetchOffset
      *
@@ -87,7 +105,6 @@ public class Simulator {
     public void setPrefetchOffset(int prefetchOffset) {
         this.prefetchOffset = prefetchOffset;
     }
-
 
     /**
      * Dit zijn de configuraties die mogelijk zijn. Als je hier één toevoegt
@@ -155,26 +172,26 @@ public class Simulator {
         simulatorView = (SimulatorView) SimulatorApp.getApplication().getSimulatorView();
         cacheSize = (int) (simulatorView.getCacheSize() * Math.pow(2, 10));
         //cacheSize = (int) Math.pow(2, 10);
-        cacheAddresses = cacheSize/blockSize;
+        cacheAddresses = cacheSize / blockSize;
         victimSize = simulatorView.getVictimCacheSize();
         prefetchOffset = simulatorView.getPrefetchOffset();
 
-		int sets = simulatorView.getAssocSetsNumber();
+        ways = simulatorView.getAssocSetsNumber();
 
         if (currentCacheType.equals(CacheType.Plain)) {
             cache = new DirectMappedCache(cacheAddresses, null, null);
-        } else if(currentCacheType.equals(CacheType.LinearPrefetch)) {
+        } else if (currentCacheType.equals(CacheType.LinearPrefetch)) {
             cache = new DirectMappedCache(cacheAddresses, new LinearPrefetch(prefetchOffset), null);
-        } else if(currentCacheType.equals(CacheType.ScalablePrefetch)) {
+        } else if (currentCacheType.equals(CacheType.ScalablePrefetch)) {
             cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), null);
-        } else if(currentCacheType.equals(CacheType.LinearPrefetch_PlainVictimCache)) {
+        } else if (currentCacheType.equals(CacheType.LinearPrefetch_PlainVictimCache)) {
             cache = new DirectMappedCache(cacheAddresses, new LinearPrefetch(prefetchOffset), new PlainVictimCache(victimSize));
-        } else if(currentCacheType.equals(CacheType.ScalablePrefetch_PlainVictimCache)) {
-            cache = new DirectMappedCache(cacheAddresses,new ScalablePrefetch(), new PlainVictimCache(victimSize));
-        } else if(currentCacheType.equals(CacheType.Assoc)) {
-            cache = new AssocCache(cacheSize, sets, null);
-        } else if(currentCacheType.equals(CacheType.AssocCounter)) {
-            cache = new AssocCache(cacheSize, sets, new CountingPredictor());
+        } else if (currentCacheType.equals(CacheType.ScalablePrefetch_PlainVictimCache)) {
+            cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), new PlainVictimCache(victimSize));
+        } else if (currentCacheType.equals(CacheType.Assoc)) {
+            cache = new AssocCache(cacheSize, ways, null);
+        } else if (currentCacheType.equals(CacheType.AssocCounter)) {
+            cache = new AssocCache(cacheSize, ways, new CountingPredictor());
         }
     }
 
@@ -202,5 +219,4 @@ public class Simulator {
     public void setTraceFile(File traceFile) {
         this.traceFile = traceFile;
     }
-
 }

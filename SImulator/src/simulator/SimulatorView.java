@@ -129,15 +129,16 @@ public class SimulatorView extends FrameView {
         TableModel tableModel = outputTable.getModel();
         tableModel.setValueAt(file.getName(), currentRow, 0);
         tableModel.setValueAt(simulator.getCache(), currentRow, 1);
-        tableModel.setValueAt(simulator.getCacheSize(), currentRow, 2);
-        tableModel.setValueAt(simulator.getCacheAddresses(), currentRow, 3);
-        tableModel.setValueAt(simulator.getBlockSize(), currentRow, 4);
-        tableModel.setValueAt(simulator.getPrefetchOffset(), currentRow, 5);
-        tableModel.setValueAt(simulator.getVictimSize(), currentRow, 6);
-        tableModel.setValueAt(cache.getHits(), currentRow, 7);
-        tableModel.setValueAt(cache.getMisses(), currentRow, 8);
-        tableModel.setValueAt(cache.getHitRate(), currentRow, 9);
-        tableModel.setValueAt(cache.getMissRate(), currentRow, 10);
+        tableModel.setValueAt(simulator.getWays(), currentRow, 2);
+        tableModel.setValueAt(simulator.getCacheSize(), currentRow, 3);
+        tableModel.setValueAt(simulator.getCacheAddresses(), currentRow, 4);
+        tableModel.setValueAt(simulator.getBlockSize(), currentRow, 5);
+        tableModel.setValueAt(simulator.getPrefetchOffset(), currentRow, 6);
+        tableModel.setValueAt(simulator.getVictimSize(), currentRow, 7);
+        tableModel.setValueAt(cache.getHits(), currentRow, 8);
+        tableModel.setValueAt(cache.getMisses(), currentRow, 9);
+        tableModel.setValueAt(cache.getHitRate(), currentRow, 10);
+        tableModel.setValueAt(cache.getMissRate(), currentRow, 11);
         currentRow++;
     }
 
@@ -220,98 +221,98 @@ public class SimulatorView extends FrameView {
 
         outputTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Filename", "Cache", "Cache Size", "Cache Addresses", "Block Size", "Prefetch Offset", "Victim Size", "Hits", "Misses", "Hitrate", "Missrate"
+                "Filename", "Cache", "Ways", "Cache Size", "Cache Addresses", "Block Size", "Prefetch Offset", "Victim Size", "Hits", "Misses", "Hitrate", "Missrate"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Long.class, java.lang.Long.class, java.lang.Float.class, java.lang.Float.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Long.class, java.lang.Long.class, java.lang.Long.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Long.class, java.lang.Long.class, java.lang.Float.class, java.lang.Float.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -326,15 +327,16 @@ public class SimulatorView extends FrameView {
         jScrollPane2.setViewportView(outputTable);
         outputTable.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("outputTable.columnModel.title0")); // NOI18N
         outputTable.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("outputTable.columnModel.title1")); // NOI18N
-        outputTable.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("outputTable.columnModel.title2")); // NOI18N
-        outputTable.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("outputTable.columnModel.title3")); // NOI18N
-        outputTable.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("outputTable.columnModel.title4")); // NOI18N
-        outputTable.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("outputTable.columnModel.title9")); // NOI18N
-        outputTable.getColumnModel().getColumn(6).setHeaderValue(resourceMap.getString("outputTable.columnModel.title10")); // NOI18N
-        outputTable.getColumnModel().getColumn(7).setHeaderValue(resourceMap.getString("outputTable.columnModel.title5")); // NOI18N
-        outputTable.getColumnModel().getColumn(8).setHeaderValue(resourceMap.getString("outputTable.columnModel.title6")); // NOI18N
-        outputTable.getColumnModel().getColumn(9).setHeaderValue(resourceMap.getString("outputTable.columnModel.title7")); // NOI18N
-        outputTable.getColumnModel().getColumn(10).setHeaderValue(resourceMap.getString("outputTable.columnModel.title8")); // NOI18N
+        outputTable.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("outputTable.columnModel.title11")); // NOI18N
+        outputTable.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("outputTable.columnModel.title2")); // NOI18N
+        outputTable.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("outputTable.columnModel.title3")); // NOI18N
+        outputTable.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("outputTable.columnModel.title4")); // NOI18N
+        outputTable.getColumnModel().getColumn(6).setHeaderValue(resourceMap.getString("outputTable.columnModel.title9")); // NOI18N
+        outputTable.getColumnModel().getColumn(7).setHeaderValue(resourceMap.getString("outputTable.columnModel.title10")); // NOI18N
+        outputTable.getColumnModel().getColumn(8).setHeaderValue(resourceMap.getString("outputTable.columnModel.title5")); // NOI18N
+        outputTable.getColumnModel().getColumn(9).setHeaderValue(resourceMap.getString("outputTable.columnModel.title6")); // NOI18N
+        outputTable.getColumnModel().getColumn(10).setHeaderValue(resourceMap.getString("outputTable.columnModel.title7")); // NOI18N
+        outputTable.getColumnModel().getColumn(11).setHeaderValue(resourceMap.getString("outputTable.columnModel.title8")); // NOI18N
 
         prefetchSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 1024, 1));
         prefetchSpinner.setName("prefetchSpinner"); // NOI18N
@@ -369,7 +371,7 @@ public class SimulatorView extends FrameView {
         jLabel8.setText(resourceMap.getString("jLabel8.text")); // NOI18N
         jLabel8.setName("jLabel8"); // NOI18N
 
-        setsSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 1024, 1));
+        setsSpinner.setModel(new javax.swing.SpinnerNumberModel(4, 1, 128, 1));
         setsSpinner.setName("setsSpinner"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
