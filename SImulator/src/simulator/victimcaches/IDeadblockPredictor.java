@@ -11,7 +11,7 @@ public interface IDeadblockPredictor {
 	 * @param cacheBlock
 	 * @return TRUE if cacheBlock is dead after this reference
 	 */
-	public boolean access(long cacheBlock);
+	public boolean access(long cacheBlock, long programCounter);
 
 	/**
 	 * Needs to be called when a cacheBlock is evicted from the cache

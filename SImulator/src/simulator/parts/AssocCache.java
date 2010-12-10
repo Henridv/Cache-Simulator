@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import simulator.Simulator;
 import simulator.SimulatorApp;
 import simulator.victimcaches.IDeadblockPredictor;
@@ -58,68 +59,78 @@ public class AssocCache extends Cache {
 
 	@Override
 	public boolean access(long address) {
-		int set = (int) ((address >>> offset) % sets);
-		long tag = (address >>> offset) >>> setIndexBits;
+		long block = address >>> offset;
+		int set = (int) (block % sets);
 
-		if (predictor != null) {
-			boolean dead = predictor.access(tag);
-			if(dead) System.out.println("DEAD");
-		}
-		if (cache[set].containsKey(tag) && cache[set].get(tag)) {
+		if (cache[set].containsKey(block) && cache[set].get(block)) {
 			hits++;
 			return true;
 		} else {
 			misses++;
-			cache[set].put(tag, Boolean.TRUE);
+			cache[set].put(block, Boolean.TRUE);
 			return false;
 		}
 	}
 
+    @Override
+    public boolean access(long address, long programCounter) {
+		long block = address >>> offset;
+		int set = (int) (block % sets);
+
+		if (predictor != null) {
+			predictor.access(block, programCounter);
+		}
+		if (cache[set].containsKey(block) && cache[set].get(block)) {
+			hits++;
+			return true;
+		} else {
+			misses++;
+			cache[set].put(block, Boolean.TRUE);
+			return false;
+		}
+    }
 	/**
 	 * If there is a predictor for dead blocks this method will check if there are dead blocks to remove
 	 * @param size
 	 * @param eldest
 	 * @return
 	 */
-	private boolean removeEldest(int size, int setSize, Map.Entry<Long, Boolean> eldest) {
-		int set = (int) ((eldest.getKey() >>> offset) % sets);
-		long tag = (eldest.getKey() >>> offset) >>> setIndexBits;
+	private boolean removeEldest(int size, int ways, Map.Entry<Long, Boolean> eldest) {
 		if (predictor != null) {
-			if (size > setSize) {
+			int set = (int) (eldest.getKey() % sets);
+			long eldestBlock = eldest.getKey();
+
+			if (size > ways) {
 				// if eldest is dead it can be removed
-				if (predictor.isDead(tag)) {
-					predictor.evict(tag);
+				if (predictor.isDead(eldestBlock)) {
+					predictor.evict(eldestBlock);
 					return true;
 				} else {
 					// else check if another block is dead
-					Collection<Long> c = cache[set].keySet();
-					Iterator<Long> itr = c.iterator();
+					Set<Long> blocks = cache[set].keySet();
 
-					while (itr.hasNext()) {
-						tag = (itr.next() >>> offset) >>> setIndexBits;
-						if (predictor.isDead(tag)) {
-							cache[set].remove(tag);
+					for (Long cacheBlock : blocks) {
+						if (predictor.isDead(cacheBlock)) {
+							predictor.evict(cacheBlock);
+							cache[set].remove(cacheBlock);
 							return false;
 						}
 					}
 
-					// no dead block found => remove eldest
-					tag = (eldest.getKey() >>> offset) >>> setIndexBits;
-					predictor.evict(tag);
+					predictor.evict(eldestBlock);
 					return true;
 				}
 			}
 		}
-		return size > setSize;
+		return size > ways;
 	}
 
 	@Override
 	public String toString() {
-		return "Associative";
-	}
+		String out = "Associative";
+		if (predictor != null)
+			out += " + predictor";
 
-    @Override
-    public boolean access(long parseInt, long programCounter) {
-        return access(parseInt);
-    }
+		return out;
+	}
 }

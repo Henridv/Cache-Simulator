@@ -78,7 +78,7 @@ public class TraceReadTask extends Task<Boolean, Integer> {
                             indexOfColon = str.indexOf(':');
                             if (indexOfColon > 0) {
                                 address = Long.parseLong(str.substring(indexOfColon+1));
-                                programCounter = Long.parseLong(str.substring(0, indexOfColon-1));
+                                programCounter = Long.parseLong(str.substring(0, indexOfColon));
                                 simulator.memoryAccess(address, programCounter);
                             } else {
                                 address = Long.parseLong(str);
