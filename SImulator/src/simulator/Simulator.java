@@ -159,6 +159,8 @@ public class Simulator {
         victimSize = simulatorView.getVictimCacheSize();
         prefetchOffset = simulatorView.getPrefetchOffset();
 
+		int sets = simulatorView.getAssocSetsNumber();
+
         if (currentCacheType.equals(CacheType.Plain)) {
             cache = new DirectMappedCache(cacheAddresses, null, null);
         } else if(currentCacheType.equals(CacheType.LinearPrefetch)) {
@@ -170,9 +172,9 @@ public class Simulator {
         } else if(currentCacheType.equals(CacheType.ScalablePrefetch_PlainVictimCache)) {
             cache = new DirectMappedCache(cacheAddresses,new ScalablePrefetch(), new PlainVictimCache(victimSize));
         } else if(currentCacheType.equals(CacheType.Assoc)) {
-            cache = new AssocCache((int)Math.pow(2, 10), 2, null);
+            cache = new AssocCache(cacheSize, sets, null);
         } else if(currentCacheType.equals(CacheType.AssocCounter)) {
-            cache = new AssocCache((int)Math.pow(2, 10), 2, new CountingPredictor());
+            cache = new AssocCache(cacheSize, sets, new CountingPredictor());
         }
     }
 

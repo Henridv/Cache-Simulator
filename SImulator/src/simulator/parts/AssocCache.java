@@ -26,31 +26,30 @@ public class AssocCache extends Cache {
 	protected IDeadblockPredictor predictor;
 	private Simulator simulator;
 	private int offset;
-	private int setIndex;
+	private int sets;
+	private int setIndexBits;
 	private int blockSize;
 
-	public AssocCache(int cacheSize, int sets, final IDeadblockPredictor predictor) {
+	public AssocCache(int cacheSize, final int ways, final IDeadblockPredictor predictor) {
 		this.simulator = SimulatorApp.getApplication().getSimulator();
 		this.blockSize = simulator.getBlockSize();
 		this.offset = (int) (Math.log(blockSize) / Math.log(2));
-		this.setIndex = (int) (Math.log(sets) / Math.log(2));
+		this.sets = (int) (cacheSize / blockSize) / ways;
+		this.setIndexBits = (int) (Math.log(sets) / Math.log(2));
 
 		this.predictor = predictor;
-		
-		// number of blocks per set
-		final int setSize = (cacheSize / blockSize) / sets;
 
 		// init sets, automatic LRU
 		this.cache = new LinkedHashMap[sets];
 		for (int i = 0; i < sets; i++) {
-			this.cache[i] = new LinkedHashMap<Long, Boolean>(setSize, 1, true) {
+			this.cache[i] = new LinkedHashMap<Long, Boolean>(ways, 1, true) {
 
 				@Override
 				protected boolean removeEldestEntry(Map.Entry<Long, Boolean> eldest) {
-					return removeEldest(size(), setSize, eldest);
+					return removeEldest(size(), ways, eldest);
 				}
 			};
-			for (int j = 0; j < setSize; j++) {
+			for (int j = 0; j < ways; j++) {
 				this.cache[i].put(0L, Boolean.FALSE);
 			}
 		}
@@ -59,8 +58,8 @@ public class AssocCache extends Cache {
 
 	@Override
 	public boolean access(long address) {
-		int set = (int) ((address >> offset) % (Math.pow(2, setIndex)));
-		long tag = (address >> offset) >> setIndex;
+		int set = (int) ((address >>> offset) % sets);
+		long tag = (address >>> offset) >>> setIndexBits;
 
 		if (predictor != null) {
 			boolean dead = predictor.access(tag);
@@ -83,8 +82,8 @@ public class AssocCache extends Cache {
 	 * @return
 	 */
 	private boolean removeEldest(int size, int setSize, Map.Entry<Long, Boolean> eldest) {
-		int set = (int) ((eldest.getKey() >> offset) % (Math.pow(2, setIndex)));
-		long tag = (eldest.getKey() >> offset) >> setIndex;
+		int set = (int) ((eldest.getKey() >>> offset) % sets);
+		long tag = (eldest.getKey() >>> offset) >>> setIndexBits;
 		if (predictor != null) {
 			if (size > setSize) {
 				// if eldest is dead it can be removed
@@ -97,7 +96,7 @@ public class AssocCache extends Cache {
 					Iterator<Long> itr = c.iterator();
 
 					while (itr.hasNext()) {
-						tag = (itr.next() >> offset) >> setIndex;
+						tag = (itr.next() >>> offset) >>> setIndexBits;
 						if (predictor.isDead(tag)) {
 							cache[set].remove(tag);
 							return false;
@@ -105,12 +104,17 @@ public class AssocCache extends Cache {
 					}
 
 					// no dead block found => remove eldest
-					tag = (eldest.getKey() >> offset) >> setIndex;
+					tag = (eldest.getKey() >>> offset) >>> setIndexBits;
 					predictor.evict(tag);
 					return true;
 				}
 			}
 		}
 		return size > setSize;
+	}
+
+	@Override
+	public String toString() {
+		return "Associative";
 	}
 }
