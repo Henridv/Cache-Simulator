@@ -25,4 +25,5 @@ public interface IDeadblockPredictor {
 	 * @return TRUE if cacheBlock is dead
 	 */
 	public boolean isDead(long cacheBlock);
+
 }

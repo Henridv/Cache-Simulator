@@ -121,7 +121,8 @@ public class Simulator {
         LinearPrefetch_PlainVictimCache,
         ScalablePrefetch_PlainVictimCache,
         Assoc,
-        AssocCounter
+        AssocCounter,
+        AssocCounter_ScalablePrefetch
     };
 
     /**
@@ -193,9 +194,11 @@ public class Simulator {
         } else if (currentCacheType.equals(CacheType.ScalablePrefetch_PlainVictimCache)) {
             cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), new PlainVictimCache(victimSize), false);
         } else if (currentCacheType.equals(CacheType.Assoc)) {
-            cache = new AssocCache(cacheSize, ways, null);
+            cache = new AssocCache(cacheSize, ways, null, null);
         } else if (currentCacheType.equals(CacheType.AssocCounter)) {
-            cache = new AssocCache(cacheSize, ways, new CountingPredictor());
+            cache = new AssocCache(cacheSize, ways, new CountingPredictor(), null);
+        } if (currentCacheType.equals(CacheType.AssocCounter_ScalablePrefetch)) {
+            cache = new AssocCache(cacheSize, ways, new CountingPredictor(), new ScalablePrefetch());
         }
     }
 

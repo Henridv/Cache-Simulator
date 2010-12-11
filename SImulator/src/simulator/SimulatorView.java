@@ -353,7 +353,7 @@ public class SimulatorView extends FrameView {
         jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
 
-        cacheSpinner.setModel(new javax.swing.SpinnerNumberModel(512, 1, 2048, 1));
+        cacheSpinner.setModel(new javax.swing.SpinnerNumberModel(512, 1, 10240, 512));
         cacheSpinner.setName("cacheSpinner"); // NOI18N
 
         jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
