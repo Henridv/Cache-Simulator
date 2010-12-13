@@ -2,6 +2,8 @@ package simulator.victimcaches;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *
@@ -10,12 +12,23 @@ import java.util.HashMap;
 public class CountingPredictor implements IDeadblockPredictor {
 
     protected HashMap<Long, Long> pcs;
-    protected HashMap<CountingPredictorEntry, Long> history;
+    protected LinkedHashMap<CountingPredictorEntry, Long> history;
     protected HashMap<CountingPredictorEntry, Long> counter;
     protected ArrayList<Long> deadBlocks;
 
+	private final int historyEntries = (int)Math.pow(2,12);
+
     public CountingPredictor() {
-        history = new HashMap<CountingPredictorEntry, Long>();
+        history = new LinkedHashMap<CountingPredictorEntry, Long>(historyEntries, 1, true) {
+			@Override
+			protected boolean removeEldestEntry(Map.Entry<CountingPredictorEntry, Long> eldest) {
+				return size() > historyEntries;
+			}
+		};
+		// Fill the with invalid blocks
+		for (int i = 0; i < historyEntries; i++) {
+			this.history.put(new CountingPredictorEntry(0L, 0L), 0L);
+		}
         counter = new HashMap<CountingPredictorEntry, Long>();
         pcs = new HashMap<Long, Long>();
         deadBlocks = new ArrayList<Long>();
