@@ -8,6 +8,7 @@ import simulator.prefetchers.LinearPrefetch;
 import simulator.prefetchers.ScalablePrefetch;
 import simulator.victimcaches.CountingPredictor;
 import simulator.victimcaches.PlainVictimCache;
+import simulator.victimcaches.TracePredictor;
 
 /**
  * Dit is de hoofdklasse van het project. Dit stelt de simulator voor. Dit wordt opgeroepen
@@ -122,6 +123,7 @@ public class Simulator {
         ScalablePrefetch_PlainVictimCache,
         Assoc,
         AssocCounter,
+        AssocTrace,
         AssocCounter_ScalablePrefetch
     };
 
@@ -197,7 +199,9 @@ public class Simulator {
             cache = new AssocCache(cacheSize, ways, null, null);
         } else if (currentCacheType.equals(CacheType.AssocCounter)) {
             cache = new AssocCache(cacheSize, ways, new CountingPredictor(), null);
-        } if (currentCacheType.equals(CacheType.AssocCounter_ScalablePrefetch)) {
+        } else if (currentCacheType.equals(CacheType.AssocTrace)) {
+            cache = new AssocCache(cacheSize, ways, new TracePredictor(), null);
+        } else if (currentCacheType.equals(CacheType.AssocCounter_ScalablePrefetch)) {
             cache = new AssocCache(cacheSize, ways, new CountingPredictor(), new ScalablePrefetch());
         }
     }

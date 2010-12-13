@@ -58,4 +58,9 @@ public class TracePredictor implements IDeadblockPredictor {
 	public boolean isDead(long cacheBlock) {
 		return deadBlocks.contains(cacheBlock);
 	}
+
+	@Override
+	public String toString() {
+		return "Trace";
+	}
 }
