@@ -16,7 +16,7 @@ public class CountingPredictor implements IDeadblockPredictor {
     protected HashMap<CountingPredictorEntry, Long> counter;
     protected ArrayList<Long> deadBlocks;
 
-	private final int historyEntries = (int)Math.pow(2,9);
+	private final int historyEntries = (int)Math.pow(2,7);
 
     public CountingPredictor() {
         history = new LinkedHashMap<CountingPredictorEntry, Long>(historyEntries, 1, true) {
@@ -41,9 +41,6 @@ public class CountingPredictor implements IDeadblockPredictor {
             pcs.put(cacheBlock, programCounter);
         }
 
-        //@Henri: 'k had hier een nieuw object van gemaakt omdat ik de set
-        // ook wou bijhouden, mr bleek dan niet nodig. Kheb het wel zo gelaten
-        // zodat we de equals functie zelf kunnen overriden (veiliger)
         CountingPredictorEntry entry = new CountingPredictorEntry(cacheBlock, pcs.get(cacheBlock));
 
         if (history.get(entry) == null) {
@@ -53,7 +50,7 @@ public class CountingPredictor implements IDeadblockPredictor {
                 counter.put(entry, 1L);
             } else {
                 counter.put(entry, count + 1);
-            }
+				}
             return false;
         } else {
             // cacheBlock is referenced the 2nd or more time
@@ -83,7 +80,6 @@ public class CountingPredictor implements IDeadblockPredictor {
             if (history.get(entry) == null) {
                 pcs.remove(cacheBlock);
                 history.put(entry, counter.get(entry));
-                System.out.println(history.size());
             } else {
                 deadBlocks.remove(cacheBlock);  // Verwijderen wnr het als dode blok vervangen wordt
                 pcs.remove(cacheBlock);         // uit huidige programcounters verwijderen
