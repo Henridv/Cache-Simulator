@@ -28,9 +28,13 @@ public class PlainVictimCache {
         }
     }
 
+	public void remove(long memAddress) {
+		victimCache.remove(memAddress);
+	}
+
     public boolean switchAddresses(long oldMemAddress, long newMemAddress) {
         victimCache.addFirst(newMemAddress);
-        return victimCache.remove((long) oldMemAddress);
+        return victimCache.remove(oldMemAddress);
     }
 
     /**

@@ -122,9 +122,11 @@ public class Simulator {
         LinearPrefetch_PlainVictimCache,
         ScalablePrefetch_PlainVictimCache,
         Assoc,
+        Assoc_Prefetch_Victim,
         AssocCounter,
         AssocTrace,
-        AssocCounter_ScalablePrefetch
+        AssocCounter_ScalablePrefetch,
+        AssocTrace_ScalablePrefetch
     };
 
     /**
@@ -196,13 +198,17 @@ public class Simulator {
         } else if (currentCacheType.equals(CacheType.ScalablePrefetch_PlainVictimCache)) {
             cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), new PlainVictimCache(victimSize), false);
         } else if (currentCacheType.equals(CacheType.Assoc)) {
-            cache = new AssocCache(cacheSize, ways, null, null);
+            cache = new AssocCache(cacheSize, ways);
+        } else if (currentCacheType.equals(CacheType.Assoc_Prefetch_Victim)) {
+            cache = new AssocCache(cacheSize, ways, new PlainVictimCache(victimSize), new ScalablePrefetch());
         } else if (currentCacheType.equals(CacheType.AssocCounter)) {
             cache = new AssocCache(cacheSize, ways, new CountingPredictor(), null);
         } else if (currentCacheType.equals(CacheType.AssocTrace)) {
             cache = new AssocCache(cacheSize, ways, new TracePredictor(), null);
         } else if (currentCacheType.equals(CacheType.AssocCounter_ScalablePrefetch)) {
             cache = new AssocCache(cacheSize, ways, new CountingPredictor(), new ScalablePrefetch());
+        } else if (currentCacheType.equals(CacheType.AssocTrace_ScalablePrefetch)) {
+            cache = new AssocCache(cacheSize, ways, new TracePredictor(), new ScalablePrefetch());
         }
     }
 
