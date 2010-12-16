@@ -16,7 +16,7 @@ public class CountingPredictor implements IDeadblockPredictor {
     protected HashMap<CountingPredictorEntry, Long> counter;
     protected ArrayList<Long> deadBlocks;
 
-	private final int historyEntries = (int)Math.pow(2,12);
+	private final int historyEntries = (int)Math.pow(2,9);
 
     public CountingPredictor() {
         history = new LinkedHashMap<CountingPredictorEntry, Long>(historyEntries, 1, true) {

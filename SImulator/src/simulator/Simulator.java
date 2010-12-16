@@ -122,6 +122,7 @@ public class Simulator {
         LinearPrefetch_PlainVictimCache,
         ScalablePrefetch_PlainVictimCache,
         Assoc,
+        Assoc_Victim,
         Assoc_Prefetch_Victim,
         AssocCounter,
         AssocTrace,
@@ -199,6 +200,8 @@ public class Simulator {
             cache = new DirectMappedCache(cacheAddresses, new ScalablePrefetch(), new PlainVictimCache(victimSize), false);
         } else if (currentCacheType.equals(CacheType.Assoc)) {
             cache = new AssocCache(cacheSize, ways);
+        } else if (currentCacheType.equals(CacheType.Assoc_Victim)) {
+            cache = new AssocCache(cacheSize, ways, new PlainVictimCache(victimSize), null);
         } else if (currentCacheType.equals(CacheType.Assoc_Prefetch_Victim)) {
             cache = new AssocCache(cacheSize, ways, new PlainVictimCache(victimSize), new ScalablePrefetch());
         } else if (currentCacheType.equals(CacheType.AssocCounter)) {

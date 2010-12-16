@@ -297,6 +297,9 @@ public class AssocCache extends Cache {
 		if (prefetcher != null) {
 			out += "_" + prefetcher;
 		}
+		if (victimCache != null) {
+			out += "_" + victimCache;
+		}
 		return out;
 	}
 
