@@ -344,7 +344,7 @@ public class SimulatorView extends FrameView {
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
-        victimSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(4096), Integer.valueOf(1), null, Integer.valueOf(1)));
+        victimSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(128), Integer.valueOf(1), null, Integer.valueOf(1)));
         victimSpinner.setName("victimSpinner"); // NOI18N
 
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
