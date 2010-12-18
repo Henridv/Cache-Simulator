@@ -8,6 +8,7 @@ import org.jdesktop.application.Task;
 import simulator.SimulatorApp;
 import simulator.Simulator;
 import simulator.SimulatorView;
+import simulator.parts.AssocCache;
 
 /**
  *
@@ -54,7 +55,7 @@ public class TraceReadTask extends Task<Boolean, Integer> {
             // Enkel .out files bekijken. Nog niet gegarandeerd dat het memtraces zijn
             // maar is op zich niet zo erg
             if (file.getName().endsWith(".out")) {
-
+                simulator.resetSimulator();
                 // Count lines
                 setMessage("Counting lines");
                 BufferedReader in = new BufferedReader(new FileReader(file.getAbsolutePath()));
@@ -97,6 +98,10 @@ public class TraceReadTask extends Task<Boolean, Integer> {
                 setMessage("Finished file: " + file.getName());
                 in.close();
                 simulatorView.updateHitMisses(file);
+                System.out.println("Lines:\t" + count);
+                System.out.println("Count2:\t" + ((AssocCache)simulator.getCache()).getCount());
+                System.out.println("L1hits:\t" + (count - ((AssocCache)simulator.getCache()).getCount()));
+                System.out.println("Hits + misses:\t" + (simulator.getCache().getHits() + simulator.getCache().getMisses()));
             } else {
                 System.err.println("WARNING: This is not a trace-file: " + file.getName());
             }

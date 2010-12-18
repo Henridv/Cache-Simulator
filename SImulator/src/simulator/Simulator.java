@@ -134,9 +134,6 @@ public class Simulator {
      *
      */
     public Simulator() {
-        System.out.println("WORD SIZE: " + blockSize);
-        System.out.println("CACHE_SIZE: " + cacheSize);
-        System.out.println("ADDRESSES: " + cacheSize / blockSize);
         currentCacheType = CacheType.Plain;
         _initCacheType();
     }
