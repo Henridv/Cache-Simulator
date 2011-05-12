@@ -4,7 +4,6 @@
 
 package simulator;
 
-import java.util.Locale;
 import javax.swing.UIManager;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
